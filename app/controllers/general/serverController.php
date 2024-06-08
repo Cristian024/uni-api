@@ -16,8 +16,8 @@ class ServerController {
 
     public static function validateToken(){
         $headers = getallheaders();
+        if($headers === null || $headers === '') ResponseController::sentBadRequestResponse('Headers not provided');
         if(!isset($headers['Authorization'])) ResponseController::sentBadRequestResponse('Access token not provided');
-        if($headers === null || $headers === '') ResponseController::sentBadRequestResponse('Access token not provided');;
         if($headers['Authorization'] != Credentials::$ACCESS_TOKEN) ResponseController::sentUnauthorizedResponse('Incorrect Token');
     }
 
