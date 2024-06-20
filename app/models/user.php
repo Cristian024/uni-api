@@ -16,10 +16,6 @@ class User
     public $email;
     public $password;
 
-    private static $USER_NOT_FOUND_CODE = 201;
-    private static $INCORRECT_PASSWORD_CODE = 202;
-    private static $USER_ALREADY_EXISTS = 203;
-
     function __construct($id, $name, $age, $email, $password)
     {
         $this->id = $id;
@@ -68,8 +64,7 @@ class User
         $userExists = User::userExists($params['email']);
 
         if ($userExists != null) {
-            $registerResponse->code = User::$USER_ALREADY_EXISTS;
-            $registerResponse->message = 'User already exists';
+            ResponseController::sentBadRequestResponse('User already exists');
         } else {
             $user = new User(null, $params['name'], null, $params['email'], md5($params['password']));
             $fields = DatabaseHelper::extractParams(User::class, $user, 'insert');
@@ -97,11 +92,9 @@ class User
         $user = User::userExists($params['query']);
 
         if ($user == null) {
-            $loginResponse->code = User::$USER_NOT_FOUND_CODE;
-            $loginResponse->message = 'User not found';
+            ResponseController::sentNotFoundResponse('User not found');
         } else if (md5($params['password']) != $user['password']) {
-            $loginResponse->code = User::$INCORRECT_PASSWORD_CODE;
-            $loginResponse->message = 'Incorrect password';
+            ResponseController::sentBadRequestResponse('Incorrect password');
         } else {
             $session = Session::createSession($user);
             $loginResponse->message = 'Session successfully created';
