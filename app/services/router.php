@@ -42,7 +42,7 @@ class Router{
                 call_user_func_array($route['callback'], []);
             }
         }
-        ResponseController::sentNotFoundResponse('Route `'.$uri.'` is not defined');
+        ResponseController::sentNotFoundResponse('Route `'.$uri.'` with method `'.$method.'` is not defined');
     }
 
     private static function convertToRegex($uri)

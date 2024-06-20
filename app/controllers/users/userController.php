@@ -3,6 +3,7 @@
 namespace App\Controllers\Users;
 
 use App\Controllers\General\ResponseController;
+use App\Helpers\RequestHelper;
 use App\Models\User;
 
 class UserController{
@@ -22,7 +23,7 @@ class UserController{
     }
 
     public static function insertUser(){
-        $data = User::insertUser();
+        $data = User::insertUser(null);
         ResponseController::sentSuccessflyResponse($data);    
     }
 
@@ -33,6 +34,16 @@ class UserController{
 
     public static function deleteUser(){
         $data = User::deleteUser();
+        ResponseController::sentSuccessflyResponse($data);
+    }
+
+    public static function userLogin(){
+        $data = User::userLogin();
+        ResponseController::sentSuccessflyResponse($data);
+    }
+
+    public static function userRegister(){
+        $data = User::userRegister();
         ResponseController::sentSuccessflyResponse($data);
     }
 }

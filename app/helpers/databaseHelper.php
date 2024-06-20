@@ -25,7 +25,7 @@ class DatabaseHelper
         foreach ($data as $key => $value) {
             if (array_key_exists($key, $attributes) && $key !== 'id') {
                 $columns[] = $key;
-                if (is_int($value) || is_float($value) || is_double($value) || is_float($value)) {
+                if (is_int($value) || is_float($value) || is_double($value)) {
                     $values[] = "$value";
                 } else if (is_bool($value)) {
                     $values[] = $value ? "'true'" : "'false'";
@@ -33,7 +33,7 @@ class DatabaseHelper
                     $values[] = "'" . $value . "'";
                 }
                 $count++;
-            } else {
+            } else if($key !== 'id'){
                 ResponseController::sentBadRequestResponse('' . $entity . 'Class: param `' . $key . '` is not accepted');
             }
         }

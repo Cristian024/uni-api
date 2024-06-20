@@ -15,9 +15,9 @@ class DataBaseController
         $connection = new Database();
         try {
             if ($field != null) {
-                if($queryId != null){
-                    $sql .= " WHERE $field = '$queryId'";   
-                }else{
+                if ($queryId != null) {
+                    $sql .= " WHERE $field = '$queryId'";
+                } else {
                     ResponseController::sentBadRequestResponse('ID is required');
                 }
             }
@@ -41,11 +41,11 @@ class DataBaseController
         }
     }
 
-    public static function executeInsert($table, $entity)
+    public static function executeInsert($table, $entity, $fields)
     {
         $connection = new Database();
         try {
-            $fields = DatabaseHelper::getParams($entity, 'insert');
+            if($fields === null) $fields = DatabaseHelper::getParams($entity, 'insert');
 
             $sql = 'INSERT INTO ' . $table . ' (' . implode(', ', $fields[0]) . ') VALUES (' . implode(', ', $fields[1]) . ')';
 
@@ -106,7 +106,7 @@ class DataBaseController
         }
     }
 
-    public static function executeDelete($table)
+    public static function executeDelete($table, $column)
     {
         global $queryId;
 
@@ -115,7 +115,7 @@ class DataBaseController
 
         $connection = new Database();
         try {
-            $sql = "DELETE FROM $table WHERE id = $queryId";
+            $sql = "DELETE FROM $table WHERE $column = $queryId";
 
             $result = $connection->query($sql);
 
