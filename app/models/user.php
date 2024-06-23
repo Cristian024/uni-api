@@ -70,8 +70,11 @@ class User
             $fields = DatabaseHelper::extractParams(User::class, $user, 'insert');
             $response = User::insertUser($fields);
 
+            $session = Session::createSession($response->id);
+
             $registerResponse->message = 'User successfully registered';
             $registerResponse->user_id = $response->id;
+            $registerResponse->session = $session;
         }
 
         return $registerResponse;
@@ -96,7 +99,7 @@ class User
         } else if (md5($params['password']) != $user['password']) {
             ResponseController::sentBadRequestResponse('Incorrect password');
         } else {
-            $session = Session::createSession($user);
+            $session = Session::createSession($user['id']);
             $loginResponse->message = 'Session successfully created';
             $loginResponse->session = $session;
         }

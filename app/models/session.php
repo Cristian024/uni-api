@@ -63,10 +63,9 @@ class Session
         return $sessionResponse;
     }
 
-    public static function createSession($user)
+    public static function createSession($user_id)
     {
         date_default_timezone_set('America/Bogota');
-        $user_id = $user['id'];
         $session_date = date('d/m/Y H:i:s');
         $cookie = RequestHelper::createCookie(50,'session');
         $ip = RequestHelper::getIPAddress();
@@ -75,9 +74,9 @@ class Session
 
         $fields = DatabaseHelper::extractParams(Session::class, $session, 'insert');
 
-        $insertId = Session::insertSession($fields);
+        $result = Session::insertSession($fields);
 
-        $session->id = $insertId->id;
+        $session->id = $result->id;
 
         return $session;
     }
