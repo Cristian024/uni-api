@@ -67,7 +67,7 @@ class Session
     public static function createSession($user_id)
     {
         date_default_timezone_set('America/Bogota');
-        $session_date = date('d/m/Y H:i:s');
+        $session_date = date('Y/m/d H:i:s');
         $cookie = RequestHelper::createCookie(50,'session');
         $ip = RequestHelper::getIPAddress();
 
