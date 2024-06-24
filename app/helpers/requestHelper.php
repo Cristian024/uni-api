@@ -37,10 +37,11 @@ class RequestHelper
         return $ipaddress;
     }
 
-    public static function getCookie($key){
+    public static function getCookie($key)
+    {
         $cookie = null;
-        if(isset($_COOKIE[$key])){
-           $cookie = $_COOKIE[$key]; 
+        if (isset($_COOKIE[$key])) {
+            $cookie = $_COOKIE[$key];
         }
 
         return $cookie;
@@ -53,5 +54,10 @@ class RequestHelper
         setcookie($key, $cookie, time() + 3600000000, '/');
 
         return $cookie;
+    }
+
+    public static function deleteCookie($key)
+    {
+        setcookie($key, "", time() - 3600, "/");
     }
 }

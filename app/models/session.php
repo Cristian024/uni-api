@@ -54,6 +54,7 @@ class Session
         $sql = "SELECT * FROM sessions WHERE cookie = '$cookie'";
         $result = DataBaseController::executeConsult($sql, null);
         if (count($result) == 0) {
+            RequestHelper::deleteCookie('session');
             ResponseController::sentNotFoundResponse('Session not found');
         } else {
             $sessionResponse->code = Session::$SESSION_VALID_CODE;
