@@ -59,6 +59,7 @@ class Session
         } else {
             $sessionResponse->code = Session::$SESSION_VALID_CODE;
             $sessionResponse->message = 'Session is valid';
+            $sessionResponse->user_id = $result[0]['user_id'];
         }
 
         return $sessionResponse;
