@@ -45,7 +45,8 @@ class DataBaseController
     {
         $connection = new Database();
         try {
-            if($fields === null) $fields = DatabaseHelper::getParams($entity, 'insert');
+            if ($fields === null)
+                $fields = DatabaseHelper::getParams($entity, 'insert');
 
             $sql = 'INSERT INTO ' . $table . ' (' . implode(', ', $fields[0]) . ') VALUES (' . implode(', ', $fields[1]) . ')';
 
@@ -65,7 +66,7 @@ class DataBaseController
         }
     }
 
-    public static function executeUpdate($table, $entity)
+    public static function executeUpdate($table, $entity, $fields)
     {
         global $queryId;
 
@@ -74,7 +75,8 @@ class DataBaseController
 
         $connection = new Database();
         try {
-            $fields = DatabaseHelper::getParams($entity, 'update');
+            if ($fields === null)
+                $fields = DatabaseHelper::getParams($entity, 'update');
 
             $sql = "UPDATE $table SET ";
 

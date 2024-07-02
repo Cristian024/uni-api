@@ -30,8 +30,13 @@ class SessionController{
         ResponseController::sentSuccessflyResponse($data);
     }
 
-    public static function validateSession(){
-        $data = Session::validateSession();
+    public static function validateSessionStudent(){
+        $data = Session::validateSession('student');
+        ResponseController::sentSuccessflyResponse($data);
+    }
+
+    public static function validateSessionEnterprise(){
+        $data = Session::validateSession('enterprise');
         ResponseController::sentSuccessflyResponse($data);
     }
 }

@@ -2,6 +2,7 @@
 #MODELS
 require_once __DIR__ . '/../app/models/response.php';
 require_once __DIR__ . '/../app/models/user.php';
+require_once __DIR__ . '/../app/models/student.php';
 require_once __DIR__ . '/../app/models/session.php';
 
 #CONTROLLERS
@@ -9,6 +10,7 @@ require_once __DIR__ . '/../app/controllers/general/dataBaseController.php';
 require_once __DIR__ . '/../app/controllers/general/responseController.php';
 require_once __DIR__ . '/../app/controllers/general/serverController.php';
 require_once __DIR__ . '/../app/controllers/users/userController.php';
+require_once __DIR__ . '/../app/controllers/users/studentController.php';
 require_once __DIR__ . '/../app/controllers/session/sessionController.php';
 
 #CREDENTIALS

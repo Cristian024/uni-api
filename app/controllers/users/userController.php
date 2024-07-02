@@ -17,18 +17,13 @@ class UserController{
         ResponseController::sentSuccessflyResponse($data);
     }
 
-    public static function getUserByName(){
-        $data = User::getUsers('name');
-        ResponseController::sentSuccessflyResponse($data);
-    }
-
     public static function insertUser(){
         $data = User::insertUser(null);
         ResponseController::sentSuccessflyResponse($data);    
     }
 
     public static function updateUser(){
-        $data = User::updateUser();
+        $data = User::updateUser(null);
         ResponseController::sentSuccessflyResponse($data);
     }
 

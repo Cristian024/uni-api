@@ -7,36 +7,27 @@ use App\Controllers\General\ResponseController;
 use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
 use App\Models\Session;
+use App\Models\Student;
 
 class User
 {
     public $id;
-    public $name;
-    public $last_name;
-    public $age;
     public $email;
     public $password;
-    public $cellphone;
-    public $date_of_birth;
-    public $gender;
-    public $faculty;
-    public $career;
-    public $student_code;
+    public $register_date;
+    public $role;
+    public $state;
+    public $block;
 
-    function __construct($id, $name, $last_name, $age, $email, $password, $cellphone, $date_of_birth, $gender, $faculty, $career, $student_code)
+    function __construct($id, $email, $password, $register_date, $role, $state, $block)
     {
         $this->id = $id;
-        $this->name = $name;
-        $this->last_name = $last_name;
-        $this->age = $age;
         $this->email = $email;
         $this->password = $password;
-        $this->cellphone = $cellphone;
-        $this->date_of_birth = $date_of_birth;
-        $this->gender = $gender;
-        $this->faculty = $faculty;
-        $this->career = $career;
-        $this->student_code = $student_code;
+        $this->register_date = $register_date;
+        $this->role = $role;
+        $this->state = $state;
+        $this->block = $block;
     }
 
     public static function getUsers($field)
@@ -50,9 +41,9 @@ class User
         return DataBaseController::executeInsert('users', User::class, $data);
     }
 
-    public static function updateUser()
+    public static function updateUser($data)
     {
-        return DataBaseController::executeUpdate('users', User::class);
+        return DataBaseController::executeUpdate('users', User::class, $data);
     }
 
     public static function deleteUser()
@@ -69,11 +60,8 @@ class User
         if (!isset($params['password']))
             ResponseController::sentBadRequestResponse('Password not provided');
 
-        if (!isset($params['name']))
-            ResponseController::sentBadRequestResponse('Name not provided');
-
-        if (!isset($params['last_name']))
-            ResponseController::sentBadRequestResponse('Last name not provided');
+        if (!isset($params['role']))
+            ResponseController::sentBadRequestResponse('Role not provided');
 
         if (!isset($params['email']))
             ResponseController::sentBadRequestResponse('Email not provided');
@@ -83,11 +71,17 @@ class User
         if ($userExists != null) {
             ResponseController::sentBadRequestResponse('User already exists');
         } else {
-            $user = new User(null, $params['name'], $params['last_name'], null, $params['email'], md5($params['password']), null, null, null, null, null, null);
+            $user = new User(null, $params['email'], md5($params['password']), date('Y-m-d H:i:s'), $params['role'], 'active', true);
             $fields = DatabaseHelper::extractParams(User::class, $user, 'insert');
             $response = User::insertUser($fields);
 
-            $session = Session::createSession($response->id);
+            if($params['role']=='student'){
+                $student = new Student(null,null, null, null, null, null, null, $response->id);
+                $fields_s = DatabaseHelper::extractParams(Student::class, $student, 'insert');
+                Student::insertStudent($fields_s);
+            }
+
+            $session = Session::createSession($response->id, $params['role']);
 
             $registerResponse->message = 'User successfully registered';
             $registerResponse->user_id = $response->id;
@@ -116,7 +110,7 @@ class User
         } else if (md5($params['password']) != $user['password']) {
             ResponseController::sentBadRequestResponse('Incorrect password');
         } else {
-            $session = Session::createSession($user['id']);
+            $session = Session::createSession($user['id'], $user['role']);
             $loginResponse->message = 'Session successfully created';
             $loginResponse->session = $session;
         }
@@ -126,7 +120,7 @@ class User
 
     private static function userExists($row)
     {
-        $sql = "SELECT * FROM users WHERE id = '$row' || name = '$row' || email = '$row'";
+        $sql = "SELECT * FROM users WHERE id = '$row' || email = '$row'";
         $result = DataBaseController::executeConsult($sql, null);
 
         if (count($result) == 0) {
