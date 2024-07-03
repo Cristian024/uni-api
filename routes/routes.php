@@ -2,6 +2,8 @@
 
 namespace App\Routes;
 
+use App\Controllers\Faculties\CareersController;
+use App\Controllers\Faculties\FacultiesController;
 use App\Controllers\Users\studentController;
 use App\Services\Router;
 use App\Controllers\Users\UserController;
@@ -14,6 +16,8 @@ class Routes
         $this->routeUsers();
         $this->routeSessions();
         $this->routeStudents();
+        $this->routesFaculties();
+        $this->routesCareers();
     }
 
     public function routeUsers()
@@ -43,5 +47,16 @@ class Routes
         Router::get('student_by_code', [StudentController::class, 'getStudentByCode']);
         Router::get('student_by_user_id', [StudentController::class, 'getStudentByUserId']);
         Router::put('student', [studentController::class, 'updateStudent']);
+    }
+
+    public function routesFaculties(){
+        Router::get('faculties', [FacultiesController::class, 'getAllFaculties']);
+        Router::get('faculty', [FacultiesController::class, 'getFaculty']);
+    }
+
+    public function routesCareers(){
+        Router::get('careers', [CareersController::class, 'getAllCareers']);
+        Router::get('career', [CareersController::class, 'getCareerById']);
+        Router::get('career_by_faculty', [CareersController::class, 'getCareerByFacultyId']);
     }
 }
