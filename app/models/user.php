@@ -76,7 +76,7 @@ class User
             $response = User::insertUser($fields);
 
             if($params['role']=='student'){
-                $student = new Student(null,null, null, null, null, null, null, $response->id);
+                $student = new Student(null,null,null,null,null, null, null, null, null, null, $response->id);
                 $fields_s = DatabaseHelper::extractParams(Student::class, $student, 'insert');
                 Student::insertStudent($fields_s);
             }
