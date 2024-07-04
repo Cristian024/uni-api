@@ -16,12 +16,14 @@ class Careers{
     }
 
     public static function getCareers($field){
-        $sql = "SELECT * FROM careers";
+        $sql = DatabaseHelper::createFilterRows("careers", "c")->_all()->_cmsel()->getSql();
         return DataBaseController::executeConsult($sql, $field);
     }
 
     public static function test($field){
-        $sql = DatabaseHelper::createFilterRows("careers", "ca")->_rows("ca.*, faculties.name AS 'f_name'")->_cmsel()->_injoin("faculty", "id", "faculties")->getSql();
+        $sql = DatabaseHelper::createFilterRows("users", "u")->_all()->_cmsel()->getSql();
+        $sql = DatabaseHelper::createFilterCondition($sql)->_greq("register_date", "2024-07-01 06:43:00")
+        ->_and()->_eq("id", "41")->getSql();
         return DataBaseController::executeConsult($sql, $field);
     }
 }
