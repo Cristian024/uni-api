@@ -51,7 +51,7 @@ class DatabaseHelper
 
             public function __construct($sql)
             {
-                $this->sql = $sql . " WHERE ";
+                $this->sql = $sql;
             }
 
             public function _eq($row, $value)
@@ -161,6 +161,11 @@ class DatabaseHelper
             public function _cmsel()
             {
                 $this->sql .= " FROM " . $this->table . " AS " . $this->nick . "";
+                return $this;
+            }
+
+            public function addFilter($filter){
+                if($filter != null) $this->sql .= " WHERE ".$filter->getSql()."";
                 return $this;
             }
 

@@ -34,10 +34,11 @@ class Student
         $this->user_id = $user_id;
     }
 
-    public static function getStudent($field)
+    public static function getStudent($filter)
     {
-        $sql = DatabaseHelper::createFilterRows("students", "s")->_rows("s.*,users.email")->_cmsel()->_injoin("user_id", "id", "users")->getSql();
-        return DataBaseController::executeConsult($sql, $field);
+        $sql = DatabaseHelper::createFilterRows("students", "s")->_rows("s.*,users.email")->_cmsel()
+        ->_injoin("user_id", "id", "users")->addFilter($filter);
+        return DataBaseController::executeConsult($sql);
     }
 
     public static function insertStudent($data)

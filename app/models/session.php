@@ -28,10 +28,10 @@ class Session
         $this->user_role = $user_role;
     }
 
-    public static function getSession($field)
+    public static function getSession($filter)
     {
-        $sql = DatabaseHelper::createFilterRows("sessions", "s")->_all()->_cmsel()->getSql();
-        return DataBaseController::executeConsult($sql, $field);
+        $sql = DatabaseHelper::createFilterRows("sessions", "s")->_all()->_cmsel()->addFilter($filter);
+        return DataBaseController::executeConsult($sql);
     }
 
     public static function insertSession($data)
@@ -53,8 +53,9 @@ class Session
         if ($cookie == null)
             ResponseController::sentBadRequestResponse('Session cookie not provided');
 
-        $sql = "SELECT * FROM sessions WHERE cookie = '$cookie'";
-        $result = DataBaseController::executeConsult($sql, null);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("cookie", $cookie);
+        $result = Session::getSession($filter);
+
         if (count($result) == 0) {
             RequestHelper::deleteCookie('session');
             ResponseController::sentNotFoundResponse('Session not found');

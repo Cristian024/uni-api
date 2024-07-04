@@ -2,22 +2,23 @@
 namespace App\Controllers\Session;
 
 use App\Controllers\General\ResponseController;
+use App\Helpers\DatabaseHelper;
+use App\Helpers\RequestHelper;
 use App\Models\Session;
 
 class SessionController{
     public static function getAllSessions(){
-        $data = Session::getSession(null);
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Session::getSession(null));
     }
 
     public static function getSessionById(){
-        $data = Session::getSession('id');
-        ResponseController::sentSuccessflyResponse($data);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("id", RequestHelper::getIdParam());
+        ResponseController::sentSuccessflyResponse(Session::getSession($filter));
     }
 
     public static function getSessionByUserId(){
-        $data = Session::getSession('user_id');
-        ResponseController::sentSuccessflyResponse($data);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("user_id", RequestHelper::getIdParam());
+        ResponseController::sentSuccessflyResponse(Session::getSession($filter));
     }
 
     public static function deleteSessionById(){

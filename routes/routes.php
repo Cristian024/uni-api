@@ -58,6 +58,5 @@ class Routes
         Router::get('careers', [CareersController::class, 'getAllCareers']);
         Router::get('career', [CareersController::class, 'getCareerById']);
         Router::get('career_by_faculty', [CareersController::class, 'getCareerByFacultyId']);
-        Router::get('test', [CareersController::class, 'test']);
     }
 }

@@ -8,21 +8,14 @@ use App\Controllers\General\ResponseController;
 
 class DataBaseController
 {
-    public static function executeConsult($sql, $field)
+    public static function executeConsult($sql)
     {
         global $queryId;
 
         $connection = new Database();
         try {
-            if ($field != null) {
-                if ($queryId != null) {
-                    $sql .= " WHERE $field = '$queryId'";
-                } else {
-                    ResponseController::sentBadRequestResponse('ID is required');
-                }
-            }
 
-            $result = $connection->query($sql);
+            $result = $connection->query($sql->getSql());
 
             if ($result) {
                 $data = array();

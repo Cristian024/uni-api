@@ -13,9 +13,9 @@ class Faculties{
         $this->name = $name;
     }
 
-    public static function getFaculties($field){
-        $sql = DatabaseHelper::createFilterRows("faculties", "f")->_all()->_cmsel()->getSql();
-        return DataBaseController::executeConsult($sql, $field);
+    public static function getFaculties($filter){
+        $sql = DatabaseHelper::createFilterRows("faculties", "f")->_all()->_cmsel()->addFilter($filter);
+        return DataBaseController::executeConsult($sql);
     }
 
     public static function insertFaculty($data){

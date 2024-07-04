@@ -56,6 +56,16 @@ class RequestHelper
         return $cookie;
     }
 
+    public static function getIdParam(){
+        global $queryId;
+
+        if($queryId != null){
+            return $queryId;
+        }else{
+            ResponseController::sentBadRequestResponse("ID is required");
+        }
+    }
+
     public static function deleteCookie($key)
     {
         setcookie($key, "", time() - 3600, "/");

@@ -2,6 +2,8 @@
 
 namespace App\Controllers\Faculties;
 use App\Controllers\General\ResponseController;
+use App\Helpers\DatabaseHelper;
+use App\Helpers\RequestHelper;
 use App\Models\Careers;
 
 class CareersController{
@@ -10,14 +12,12 @@ class CareersController{
     }
 
     public static function getCareerById(){
-        ResponseController::sentSuccessflyResponse(Careers::getCareers('id'));
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("id", RequestHelper::getIdParam());
+        ResponseController::sentSuccessflyResponse(Careers::getCareers($filter));
     }
 
     public static function getCareerByFacultyId(){
-        ResponseController::sentSuccessflyResponse(Careers::getCareers('faculty'));
-    }
-
-    public static function test(){
-        ResponseController::sentSuccessflyResponse(Careers::test(null));
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("faculty", RequestHelper::getIdParam())->getSql();
+        ResponseController::sentSuccessflyResponse(Careers::getCareers($filter));
     }
 }

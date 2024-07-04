@@ -30,10 +30,10 @@ class User
         $this->block = $block;
     }
 
-    public static function getUsers($field)
+    public static function getUsers($filter)
     {
-        $sql = DatabaseHelper::createFilterRows("users", "u")->_all()->_cmsel()->getSql();
-        return DataBaseController::executeConsult($sql, $field);
+        $sql = DatabaseHelper::createFilterRows("users", "u")->_all()->_cmsel()->addFilter($filter);
+        return DataBaseController::executeConsult($sql);
     }
 
     public static function insertUser($data)
@@ -120,8 +120,8 @@ class User
 
     private static function userExists($row)
     {
-        $sql = "SELECT * FROM users WHERE id = '$row' || email = '$row'";
-        $result = DataBaseController::executeConsult($sql, null);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("id",$row)->_or()->_eq("email", $row);
+        $result = User::getUsers($filter);
 
         if (count($result) == 0) {
             return null;

@@ -3,18 +3,18 @@
 namespace App\Controllers\Users;
 
 use App\Controllers\General\ResponseController;
+use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
 use App\Models\User;
 
 class UserController{
     public static function getAllUsers(){
-        $data = User::getUsers(null);
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(User::getUsers(null));
     }
 
     public static function getUserById(){
-        $data = User::getUsers('id');
-        ResponseController::sentSuccessflyResponse($data);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("id", RequestHelper::getIdParam());
+        ResponseController::sentSuccessflyResponse(User::getUsers($filter));
     }
 
     public static function insertUser(){

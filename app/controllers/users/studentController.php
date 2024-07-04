@@ -3,28 +3,29 @@
 namespace App\Controllers\Users;
 
 use App\Controllers\General\ResponseController;
+use App\Helpers\DatabaseHelper;
+use App\Helpers\RequestHelper;
 use App\Models\Student;
 
 class StudentController
 {
     public static function getAllStudents(){
-        $data = Student::getStudent(null);
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Student::getStudent(null));
     }
 
     public static function getStudentById(){
-        $data = Student::getStudent('id');
-        ResponseController::sentSuccessflyResponse($data);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("s.id", RequestHelper::getIdParam());
+        ResponseController::sentSuccessflyResponse(Student::getStudent($filter));
     }
 
     public static function getStudentByCode(){
-        $data = Student::getStudent('code');
-        ResponseController::sentSuccessflyResponse($data);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("code", RequestHelper::getIdParam());
+        ResponseController::sentSuccessflyResponse(Student::getStudent($filter));
     }
 
     public static function getStudentByUserId(){
-        $data = Student::getStudent('user_id');
-        ResponseController::sentSuccessflyResponse($data);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("user_id", RequestHelper::getIdParam());
+        ResponseController::sentSuccessflyResponse(Student::getStudent($filter));
     }
 
     public static function insertStudent(){
