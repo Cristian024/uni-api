@@ -42,7 +42,7 @@ class Routes
 
     public function routeStudents()
     {
-        Router::get('students', [StudentController::class, 'getAllUsers']);
+        Router::get('students', [StudentController::class, 'getAllStudents']);
         Router::get('student', [StudentController::class, 'getStudentById']);
         Router::get('student_by_code', [StudentController::class, 'getStudentByCode']);
         Router::get('student_by_user_id', [StudentController::class, 'getStudentByUserId']);
@@ -58,5 +58,6 @@ class Routes
         Router::get('careers', [CareersController::class, 'getAllCareers']);
         Router::get('career', [CareersController::class, 'getCareerById']);
         Router::get('career_by_faculty', [CareersController::class, 'getCareerByFacultyId']);
+        Router::get('test', [CareersController::class, 'test']);
     }
 }

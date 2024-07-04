@@ -33,7 +33,7 @@ class DatabaseHelper
                     $values[] = "'" . $value . "'";
                 }
                 $count++;
-            } else if($key !== 'id'){
+            } else if ($key !== 'id') {
                 ResponseController::sentBadRequestResponse('' . $entity . 'Class: param `' . $key . '` is not accepted');
             }
         }
@@ -43,5 +43,50 @@ class DatabaseHelper
         } else {
             return [$columns, $values];
         }
+    }
+    
+    public static function createFilterRows($table, $nick)
+    {
+        return new class ($table, $nick) {
+            private $sql;
+            private $table;
+            private $nick;
+
+            public function __construct($table, $nick)
+            {
+                $this->sql = "SELECT ";
+                $this->table = $table;
+                $this->nick = $nick;
+            }
+
+            public function _all()
+            {
+                $this->sql .= "" . $this->nick . ".*";
+                return $this;
+            }
+
+            public function _rows($rows)
+            {
+                $this->sql .= $rows;
+                return $this;
+            }
+
+            public function _injoin($ftable, $fjtable, $tjoin)
+            {
+                $this->sql .= " INNER JOIN " . $tjoin . " ON " . $this->nick . "." . $ftable . " = " . $tjoin . "." . $fjtable . "";
+                return $this;
+            }
+
+            public function _cmsel()
+            {
+                $this->sql .= " FROM " . $this->table . " AS " . $this->nick . "";
+                return $this;
+            }
+
+            public function getSql()
+            {
+                return $this->sql;
+            }
+        };
     }
 }

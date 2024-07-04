@@ -3,10 +3,7 @@
 namespace App\Models;
 
 use App\Controllers\General\DataBaseController;
-use App\Controllers\General\ResponseController;
 use App\Helpers\DatabaseHelper;
-use App\Helpers\RequestHelper;
-use App\Models\Session;
 
 class Student
 {
@@ -39,8 +36,7 @@ class Student
 
     public static function getStudent($field)
     {
-        $sql = "SELECT s.*, u.email FROM students AS s
-        INNER JOIN users AS u ON s.user_id = u.id";
+        $sql = DatabaseHelper::createFilterRows("students", "s")->_rows("s.*,users.email")->_cmsel()->_injoin("user_id", "id", "users")->getSql();
         return DataBaseController::executeConsult($sql, $field);
     }
 

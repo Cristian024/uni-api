@@ -16,4 +16,8 @@ class CareersController{
     public static function getCareerByFacultyId(){
         ResponseController::sentSuccessflyResponse(Careers::getCareers('faculty'));
     }
+
+    public static function test(){
+        ResponseController::sentSuccessflyResponse(Careers::test(null));
+    }
 }

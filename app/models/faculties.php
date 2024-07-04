@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use App\Controllers\General\DataBaseController;
+use App\Helpers\DatabaseHelper;
 
 class Faculties{
     public $id;
@@ -13,7 +14,7 @@ class Faculties{
     }
 
     public static function getFaculties($field){
-        $sql = "SELECT * FROM faculties";
+        $sql = DatabaseHelper::createFilterRows("faculties", "f")->_all()->_cmsel()->getSql();
         return DataBaseController::executeConsult($sql, $field);
     }
 

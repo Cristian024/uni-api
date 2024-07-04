@@ -30,7 +30,7 @@ class Session
 
     public static function getSession($field)
     {
-        $sql = "SELECT * FROM sessions";
+        $sql = DatabaseHelper::createFilterRows("sessions", "s")->_all()->_cmsel()->getSql();
         return DataBaseController::executeConsult($sql, $field);
     }
 

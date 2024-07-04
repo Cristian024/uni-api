@@ -32,7 +32,7 @@ class User
 
     public static function getUsers($field)
     {
-        $sql = "SELECT * FROM users";
+        $sql = DatabaseHelper::createFilterRows("users", "u")->_all()->_cmsel()->getSql();
         return DataBaseController::executeConsult($sql, $field);
     }
 
