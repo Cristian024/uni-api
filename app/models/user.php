@@ -75,10 +75,14 @@ class User
             $fields = DatabaseHelper::extractParams(User::class, $user, 'insert');
             $response = User::insertUser($fields);
 
-            if($params['role']=='student'){
-                $student = new Student(null,null,null,null,null, null, null, null, null, null, $response->id);
+            if ($params['role'] == 'student') {
+                $student = new Student(null, null, null, null, null, null, null, null, null, null, $response->id);
                 $fields_s = DatabaseHelper::extractParams(Student::class, $student, 'insert');
                 Student::insertStudent($fields_s);
+            } else if ($params['role'] == "enterprise") {
+                $enterprise = new Enterprise(null, null, null, $response->id);
+                $fields_s = DatabaseHelper::extractParams(Enterprise::class, $enterprise, 'insert');
+                Enterprise::insertEnterprise($fields_s);
             }
 
             $session = Session::createSession($response->id, $params['role']);
@@ -120,7 +124,7 @@ class User
 
     private static function userExists($row)
     {
-        $filter = DatabaseHelper::createFilterCondition("")->_eq("id",$row)->_or()->_eq("email", $row);
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("id", $row)->_or()->_eq("email", $row);
         $result = User::getUsers($filter);
 
         if (count($result) == 0) {

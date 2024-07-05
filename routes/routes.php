@@ -4,6 +4,7 @@ namespace App\Routes;
 
 use App\Controllers\Faculties\CareersController;
 use App\Controllers\Faculties\FacultiesController;
+use App\Controllers\Users\EnterpriseController;
 use App\Controllers\Users\studentController;
 use App\Services\Router;
 use App\Controllers\Users\UserController;
@@ -18,6 +19,7 @@ class Routes
         $this->routeStudents();
         $this->routesFaculties();
         $this->routesCareers();
+        $this->routeEnterprises();
     }
 
     public function routeUsers()
@@ -58,5 +60,11 @@ class Routes
         Router::get('careers', [CareersController::class, 'getAllCareers']);
         Router::get('career', [CareersController::class, 'getCareerById']);
         Router::get('career_by_faculty', [CareersController::class, 'getCareerByFacultyId']);
+    }
+
+    public function routeEnterprises(){
+        Router::get("enterprises", [EnterpriseController::class, "getAllEnterprises"]);
+        Router::get("enterprise", [EnterpriseController::class, "getEnterprise"]);
+        Router::get("enterprise_by_user_id", [EnterpriseController::class, "getEnterpriseByUserId"]);
     }
 }
