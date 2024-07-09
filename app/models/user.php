@@ -80,7 +80,7 @@ class User
                 $fields_s = DatabaseHelper::extractParams(Student::class, $student, 'insert');
                 Student::insertStudent($fields_s);
             } else if ($params['role'] == "enterprise") {
-                $enterprise = new Enterprise(null, null, null, $response->id);
+                $enterprise = new Enterprise(null, null, null, null, null, null, $response->id);
                 $fields_s = DatabaseHelper::extractParams(Enterprise::class, $enterprise, 'insert');
                 Enterprise::insertEnterprise($fields_s);
             }
