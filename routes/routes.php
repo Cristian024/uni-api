@@ -66,5 +66,6 @@ class Routes
         Router::get("enterprises", [EnterpriseController::class, "getAllEnterprises"]);
         Router::get("enterprise", [EnterpriseController::class, "getEnterprise"]);
         Router::get("enterprise_by_user_id", [EnterpriseController::class, "getEnterpriseByUserId"]);
+        Router::put("enterprise", [EnterpriseController::class, "updateEnterprise"]);
     }
 }

@@ -26,4 +26,8 @@ class EnterpriseController{
     public static function insertEnterprise(){
         ResponseController::sentSuccessflyResponse(Enterprise::insertEnterprise(null));
     }
+
+    public static function updateEnterprise(){
+        ResponseController::sentSuccessflyResponse(Enterprise::updateEnterprise(null));
+    }
 }
