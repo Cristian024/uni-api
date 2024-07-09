@@ -17,7 +17,7 @@ class CareersController{
     }
 
     public static function getCareerByFacultyId(){
-        $filter = DatabaseHelper::createFilterCondition("")->_eq("faculty", RequestHelper::getIdParam())->getSql();
+        $filter = DatabaseHelper::createFilterCondition("")->_eq("faculty", RequestHelper::getIdParam());
         ResponseController::sentSuccessflyResponse(Careers::getCareers($filter));
     }
 }
