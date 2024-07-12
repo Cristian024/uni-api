@@ -101,7 +101,7 @@ class DataBaseController
         }
     }
 
-    public static function executeDelete($table, $column)
+    public static function executeDelete($table, $filter)
     {
         global $queryId;
 
@@ -110,7 +110,7 @@ class DataBaseController
 
         $connection = new Database();
         try {
-            $sql = "DELETE FROM $table WHERE $column = $queryId";
+            $sql = DatabaseHelper::createDeleteFilter('sessions')->addFilter($filter)->getSql();
 
             $result = $connection->query($sql);
 

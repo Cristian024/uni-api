@@ -39,9 +39,9 @@ class Session
         return DataBaseController::executeInsert('sessions', Session::class, $data);
     }
 
-    public static function deleteSession($column)
+    public static function deleteSession($filter)
     {
-        return DataBaseController::executeDelete('sessions', $column);
+        return DataBaseController::executeDelete('sessions', $filter);
     }
 
     public static function validateSession($role)
@@ -62,7 +62,7 @@ class Session
         } else {
             $session = $result[0];
 
-            if($session['user_role'] != $role)
+            if ($session['user_role'] != $role)
                 ResponseController::sentBadRequestResponse('User is not authorized');
 
             $sessionResponse->code = Session::$SESSION_VALID_CODE;
@@ -77,7 +77,7 @@ class Session
     {
         date_default_timezone_set('America/Bogota');
         $session_date = date('Y/m/d H:i:s');
-        $cookie = RequestHelper::createCookie(50,'session');
+        $cookie = RequestHelper::createCookie(50, 'session');
         $ip = RequestHelper::getIPAddress();
 
         $session = new Session(null, $user_id, $session_date, $cookie, $ip, $role);
@@ -89,5 +89,17 @@ class Session
         $session->id = $result->id;
 
         return $session;
+    }
+
+    public static function closeSession($user)
+    {
+        $session = RequestHelper::getCookie('session');
+        RequestHelper::deleteCookie('session');
+
+        if ($session == null)
+            ResponseController::sentBadRequestResponse('Session is not provided');
+
+        $filter = DatabaseHelper::createFilterCondition('')->_eq('cookie', $session);
+        Session::deleteSession($filter);
     }
 }

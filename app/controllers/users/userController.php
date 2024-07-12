@@ -41,4 +41,9 @@ class UserController{
         $data = User::userRegister();
         ResponseController::sentSuccessflyResponse($data);
     }
+    
+    public static function userLogout(){
+        $data = User::userLogout();
+        ResponseController::sentSuccessflyResponse($data);
+    }
 }

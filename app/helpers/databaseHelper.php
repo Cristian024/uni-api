@@ -164,8 +164,34 @@ class DatabaseHelper
                 return $this;
             }
 
-            public function addFilter($filter){
-                if($filter != null) $this->sql .= " WHERE ".$filter->getSql()."";
+            public function addFilter($filter)
+            {
+                if ($filter != null)
+                    $this->sql .= " WHERE " . $filter->getSql() . "";
+                return $this;
+            }
+
+            public function getSql()
+            {
+                return $this->sql;
+            }
+        };
+    }
+
+    public static function createDeleteFilter($table)
+    {
+        return new class ($table) {
+            private $sql;
+
+            public function __construct($table)
+            {
+                $this->sql = 'DELETE FROM ' . $table . ' ';
+            }
+
+            public function addFilter($filter)
+            {
+                if ($filter != null)
+                    $this->sql .= " WHERE " . $filter->getSql() . "";
                 return $this;
             }
 

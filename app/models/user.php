@@ -122,6 +122,21 @@ class User
         return $loginResponse;
     }
 
+    public static function userLogout(){
+        $logoutResponse = new \stdClass;
+
+        $params = RequestHelper::getParams();
+
+        if(!isset($params['user_id'])){
+            ResponseController::sentBadRequestResponse('User not provided');
+        }
+
+        Session::closeSession($params['user_id']);
+
+        $logoutResponse->message = "Session was clossed";
+        return $logoutResponse;
+    }
+
     private static function userExists($row)
     {
         $filter = DatabaseHelper::createFilterCondition("")->_eq("id", $row)->_or()->_eq("email", $row);

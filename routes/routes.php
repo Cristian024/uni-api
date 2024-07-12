@@ -31,6 +31,7 @@ class Routes
         Router::delete('users', [UserController::class, 'deleteUser']);
         Router::post('login', [UserController::class, 'userLogin']);
         Router::post('register', [UserController::class, 'userRegister']);
+        Router::post('logout', [UserController::class, 'userLogout']);
     }
 
     public function routeSessions()
