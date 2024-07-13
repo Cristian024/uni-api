@@ -32,6 +32,7 @@ class Routes
         Router::post('login', [UserController::class, 'userLogin']);
         Router::post('register', [UserController::class, 'userRegister']);
         Router::post('logout', [UserController::class, 'userLogout']);
+        Router::get('any_by_user_id', [UserController::class, 'getUserByAnyType']);
     }
 
     public function routeSessions()
