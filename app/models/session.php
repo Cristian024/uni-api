@@ -62,7 +62,7 @@ class Session
         } else {
             $session = $result[0];
 
-            if ($session['user_role'] != $role)
+            if ($session['user_role'] != $role && $role != 'any')
                 ResponseController::sentBadRequestResponse('User is not authorized');
 
             $sessionResponse->code = Session::$SESSION_VALID_CODE;

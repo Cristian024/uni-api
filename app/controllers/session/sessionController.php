@@ -40,4 +40,9 @@ class SessionController{
         $data = Session::validateSession('enterprise');
         ResponseController::sentSuccessflyResponse($data);
     }
+
+    public static function validateSessionAny(){
+        $data = Session::validateSession('any');
+        ResponseController::sentSuccessflyResponse($data);
+    }
 }

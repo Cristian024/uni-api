@@ -41,6 +41,7 @@ class Routes
         Router::get('session', [SessionController::class, 'getSessionByUserId']);
         Router::post('validateSessionStudent', [SessionController::class, 'validateSessionStudent']);
         Router::post('validateSessionEnterprise', [SessionController::class, 'validateSessionEnterprise']);
+        Router::post('validateSessionAny', [SessionController::class, 'validateSessionAny']);
     }
 
     public function routeStudents()
