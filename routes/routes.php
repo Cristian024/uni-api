@@ -9,6 +9,7 @@ use App\Controllers\Users\studentController;
 use App\Services\Router;
 use App\Controllers\Users\UserController;
 use App\Controllers\Session\SessionController;
+use App\Controllers\Users\ContactsController;
 
 class Routes
 {
@@ -35,6 +36,12 @@ class Routes
         Router::get('any_by_user_id', [UserController::class, 'getUserByAnyType']);
     }
 
+    public function routeContacts()
+    {
+        Router::get('contacts_by_user_id', [ContactsController::class, 'getContactsByUserId']);
+        Router::put('contacts', [ContactsController::class, 'updateContacts']);
+    }
+
     public function routeSessions()
     {
         Router::get('sessions', [SessionController::class, 'getAllSessions']);
@@ -54,18 +61,21 @@ class Routes
         Router::put('student', [studentController::class, 'updateStudent']);
     }
 
-    public function routesFaculties(){
+    public function routesFaculties()
+    {
         Router::get('faculties', [FacultiesController::class, 'getAllFaculties']);
         Router::get('faculty', [FacultiesController::class, 'getFaculty']);
     }
 
-    public function routesCareers(){
+    public function routesCareers()
+    {
         Router::get('careers', [CareersController::class, 'getAllCareers']);
         Router::get('career', [CareersController::class, 'getCareerById']);
         Router::get('career_by_faculty', [CareersController::class, 'getCareerByFacultyId']);
     }
 
-    public function routeEnterprises(){
+    public function routeEnterprises()
+    {
         Router::get("enterprises", [EnterpriseController::class, "getAllEnterprises"]);
         Router::get("enterprise", [EnterpriseController::class, "getEnterprise"]);
         Router::get("enterprise_by_user_id", [EnterpriseController::class, "getEnterpriseByUserId"]);
