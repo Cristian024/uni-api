@@ -21,6 +21,7 @@ class Routes
         $this->routesFaculties();
         $this->routesCareers();
         $this->routeEnterprises();
+        $this->routeContacts();
     }
 
     public function routeUsers()

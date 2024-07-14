@@ -36,7 +36,7 @@ class Student
 
     public static function getStudent($filter)
     {
-        $sql = DatabaseHelper::createFilterRows("students", "s")->_rows("s.*,users.email")->_cmsel()
+        $sql = DatabaseHelper::createFilterRows("students", "s")->_rows("s.*,users.email,users.role")->_cmsel()
         ->_injoin("user_id", "id", "users")->addFilter($filter);
         return DataBaseController::executeConsult($sql);
     }

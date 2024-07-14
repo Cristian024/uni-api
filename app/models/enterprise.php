@@ -28,7 +28,7 @@ class Enterprise
 
     public static function getEnterprise($filter)
     {
-        $sql = DatabaseHelper::createFilterRows("enterprises", "e")->_rows("e.*,users.email")->_cmsel()
+        $sql = DatabaseHelper::createFilterRows("enterprises", "e")->_rows("e.*,users.email,users.role")->_cmsel()
             ->_injoin("user_id", "id", "users")->addFilter($filter);
         return DataBaseController::executeConsult($sql);
     }
