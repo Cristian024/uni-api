@@ -120,6 +120,18 @@ class DatabaseHelper
                 return $this;
             }
 
+            public function _oppar()
+            {
+                $this->sql .= " ( ";
+                return $this;
+            }
+
+            public function _clpar()
+            {
+                $this->sql .= " ) ";
+                return $this;
+            }
+
             public function getSql()
             {
                 return $this->sql;

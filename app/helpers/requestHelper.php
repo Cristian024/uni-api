@@ -9,9 +9,7 @@ class RequestHelper
     public static function getParams()
     {
         try {
-            $data = json_decode(file_get_contents("php://input"), true);
-
-            return $data;
+            return json_decode(file_get_contents("php://input"), true);
         } catch (\Exception $e) {
             ResponseController::sentInternalErrorResponse($e->getMessage());
         }

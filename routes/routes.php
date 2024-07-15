@@ -2,6 +2,7 @@
 
 namespace App\Routes;
 
+use App\Controllers\Chat\ConversationsController;
 use App\Controllers\Faculties\CareersController;
 use App\Controllers\Faculties\FacultiesController;
 use App\Controllers\Users\EnterpriseController;
@@ -22,6 +23,7 @@ class Routes
         $this->routesCareers();
         $this->routeEnterprises();
         $this->routeContacts();
+        $this->routeConversations();
     }
 
     public function routeUsers()
@@ -81,5 +83,10 @@ class Routes
         Router::get("enterprise", [EnterpriseController::class, "getEnterprise"]);
         Router::get("enterprise_by_user_id", [EnterpriseController::class, "getEnterpriseByUserId"]);
         Router::put("enterprise", [EnterpriseController::class, "updateEnterprise"]);
+    }
+
+    public function routeConversations(){
+        Router::get('conversation', [ConversationsController::class, 'getConversationById']);
+        Router::post('conversation_by_users', [ConversationsController::class, 'getConversationByUsers']);
     }
 }
