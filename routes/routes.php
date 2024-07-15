@@ -3,6 +3,7 @@
 namespace App\Routes;
 
 use App\Controllers\Chat\ConversationsController;
+use App\Controllers\Chat\MessagesController;
 use App\Controllers\Faculties\CareersController;
 use App\Controllers\Faculties\FacultiesController;
 use App\Controllers\Users\EnterpriseController;
@@ -24,6 +25,7 @@ class Routes
         $this->routeEnterprises();
         $this->routeContacts();
         $this->routeConversations();
+        $this->routeMessages();
     }
 
     public function routeUsers()
@@ -88,5 +90,10 @@ class Routes
     public function routeConversations(){
         Router::get('conversation', [ConversationsController::class, 'getConversationById']);
         Router::post('conversation_by_users', [ConversationsController::class, 'getConversationByUsers']);
+    }
+
+    public function routeMessages(){
+        Router::post('message_by_conversation', [MessagesController::class, 'getMessagesByConversationId']);
+        Router::post('message', [MessagesController::class, 'insertMessage']);
     }
 }

@@ -9,6 +9,7 @@ require_once __DIR__ . '/../app/models/careers.php';
 require_once __DIR__ . '/../app/models/faculties.php';
 require_once __DIR__ . '/../app/models/contact.php';
 require_once __DIR__ . '/../app/models/conversation.php';
+require_once __DIR__ . '/../app/models/message.php';
 
 #CONTROLLERS
 require_once __DIR__ . '/../app/controllers/general/dataBaseController.php';
@@ -22,6 +23,7 @@ require_once __DIR__ . '/../app/controllers/faculties/careersController.php';
 require_once __DIR__ . '/../app/controllers/faculties/facultiesController.php';
 require_once __DIR__ . '/../app/controllers/users/contactsController.php';
 require_once __DIR__ . '/../app/controllers/chat/conversationsController.php';
+require_once __DIR__ . '/../app/controllers/chat/messagesController.php';
 
 #CREDENTIALS
 require_once __DIR__ . '/../config/credentials.php';
