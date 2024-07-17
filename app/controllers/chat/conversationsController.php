@@ -6,14 +6,23 @@ use App\Controllers\General\ResponseController;
 use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
 use App\Models\Conversation;
+use App\Models\Message;
 
 class ConversationsController
 {
     public static function getConversationById()
     {
+        $conversation_obj = new \stdClass;
         $id = RequestHelper::getIdParam();
-        $filter = DatabaseHelper::createFilterCondition('')->_eq('id', $id);
-        ResponseController::sentSuccessflyResponse(Conversation::getConversation($filter));
+        $filter_c = DatabaseHelper::createFilterCondition('')->_eq('id', $id);
+        $filter_m = DatabaseHelper::createFilterCondition('')->_eq('conversation_id', $id);
+
+        $conversation = Conversation::getConversation($filter_c);
+        $count_messages = Message::getCountMessages($filter_m);
+
+        $conversation_obj->count_messages = $count_messages[0]['count_messages'];
+        $conversation_obj->conversation = $conversation[0];
+        ResponseController::sentSuccessflyResponse($conversation_obj);
     }
 
     public static function getConversationByUsers()
@@ -35,7 +44,9 @@ class ConversationsController
         $result = Conversation::getConversation($filter);
 
         if(sizeof($result) > 0){
-            $converation = $result[0];
+            global $queryId;
+            $queryId = $result[0]['id'];
+            ConversationsController::getConversationById();
         }else{
             $c_conversation = new Conversation(null, $user_one, $user_two, null);
             $result_i = Conversation::insertConversation(DatabaseHelper::extractParams(Conversation::class, $c_conversation, 'insert'));

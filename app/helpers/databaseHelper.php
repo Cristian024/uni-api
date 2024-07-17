@@ -132,12 +132,37 @@ class DatabaseHelper
                 return $this;
             }
 
+            public function _ordes($row)
+            {
+                $this->sql .= " ORDER BY " . $row . " DESC";
+                return $this;
+            }
+
+            public function _ordas($row)
+            {
+                $this->sql .= " ORDER BY " . $row . "";
+                return $this;
+            }
+
+            public function _lim($limit)
+            {
+                $this->sql .= " LIMIT " . $limit . " ";
+                return $this;
+            }
+
+            public function _off($offset)
+            {
+                $this->sql .= " OFFSET " . $offset . "";
+                return $this;
+            }
+
             public function getSql()
             {
                 return $this->sql;
             }
         };
     }
+
     public static function createFilterRows($table, $nick)
     {
         return new class ($table, $nick) {

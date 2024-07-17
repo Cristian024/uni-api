@@ -23,6 +23,11 @@ class Message{
         $sql = DatabaseHelper::createFilterRows('messages', 'm')->_all()->_cmsel()->addFilter($filter);
         return DataBaseController::executeConsult($sql);
     }
+
+    public static function getCountMessages($filter){
+        $sql = DatabaseHelper::createFilterRows('messages', 'm')->_rows('COUNT(id) AS count_messages')->_cmsel()->addFilter($filter);
+        return DataBaseController::executeConsult($sql);
+    }
     public static function insertMessage($data){
         return DataBaseController::executeInsert('messages',Message::class,$data);
     }
