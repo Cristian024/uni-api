@@ -57,4 +57,8 @@ class ConversationsController
 
         ResponseController::sentSuccessflyResponse($converation);
     }
+
+    public static function updateConversation(){
+        ResponseController::sentBadRequestResponse(Conversation::updateConversation(null));
+    }
 }

@@ -90,6 +90,7 @@ class Routes
     public function routeConversations(){
         Router::get('conversation', [ConversationsController::class, 'getConversationById']);
         Router::post('conversation_by_users', [ConversationsController::class, 'getConversationByUsers']);
+        Router::put('conversation', [ConversationsController::class, 'updateConversation']);
     }
 
     public function routeMessages(){
