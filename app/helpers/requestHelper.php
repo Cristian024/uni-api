@@ -15,6 +15,16 @@ class RequestHelper
         }
     }
 
+    public static function getParam($key)
+    {
+        $params = RequestHelper::getParams();
+        if (isset($params[$key])) {
+            return $params[$key];
+        } else {
+            return null;
+        }
+    }
+
     public static function getIPAddress()
     {
         $ipaddress = '';
@@ -54,12 +64,13 @@ class RequestHelper
         return $cookie;
     }
 
-    public static function getIdParam(){
+    public static function getIdParam()
+    {
         global $queryId;
 
-        if($queryId != null){
+        if ($queryId != null) {
             return $queryId;
-        }else{
+        } else {
             ResponseController::sentBadRequestResponse("ID is required");
         }
     }

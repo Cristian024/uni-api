@@ -5,6 +5,7 @@ namespace App\Controllers\Chat;
 use App\Controllers\General\ResponseController;
 use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
+use App\Models\Conversation;
 use App\Models\Message;
 
 class MessagesController
@@ -32,6 +33,20 @@ class MessagesController
 
     public static function insertMessage()
     {
-        ResponseController::sentSuccessflyResponse(Message::insertMessage(null));
+        global $queryId;
+        $rs_inserMsg = Message::insertMessage(null);
+
+        $params = RequestHelper::getParams();
+
+        $conv_upd = new \stdClass;
+        $conv_upd->last_message = $params['phrase'];
+        $conv_upd->last_message_date = $params['cdate'];
+        $conv_upd->last_message_from = $params['user_post'];
+
+        $queryId = $params['conversation_id'];
+
+        Conversation::updateConversation(DatabaseHelper::extractParams(Conversation::class, $conv_upd, 'update'));
+
+        ResponseController::sentSuccessflyResponse($rs_inserMsg);
     }
 }

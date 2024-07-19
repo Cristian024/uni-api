@@ -48,7 +48,7 @@ class ConversationsController
             $queryId = $result[0]['id'];
             ConversationsController::getConversationById();
         }else{
-            $c_conversation = new Conversation(null, $user_one, $user_two, null);
+            $c_conversation = new Conversation(null, $user_one, $user_two, null, null, null);
             $result_i = Conversation::insertConversation(DatabaseHelper::extractParams(Conversation::class, $c_conversation, 'insert'));
             $result_c = Conversation::getConversation(DatabaseHelper::createFilterCondition('')->_eq('id', $result_i->id));
 
