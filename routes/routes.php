@@ -77,6 +77,8 @@ class Routes
         Router::get('careers', [CareersController::class, 'getAllCareers']);
         Router::get('career', [CareersController::class, 'getCareerById']);
         Router::get('career_by_faculty', [CareersController::class, 'getCareerByFacultyId']);
+        Router::post('careers', [CareersController::class, 'insertCareer']);
+        Router::delete('career', [CareersController::class, 'deleteCareer']);
     }
 
     public function routeEnterprises()

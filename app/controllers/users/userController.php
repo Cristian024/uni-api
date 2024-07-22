@@ -3,83 +3,90 @@
 namespace App\Controllers\Users;
 
 use App\Controllers\General\ResponseController;
-use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
-use App\Models\Enterprise;
-use App\Models\Student;
-use App\Models\User;
+use App\Models\Enterprises;
+use App\Models\Filter;
+use App\Models\Students;
+use App\Models\Users;
 
 class UserController
 {
     public static function getAllUsers()
     {
-        ResponseController::sentSuccessflyResponse(User::getUsers(null));
+        ResponseController::sentSuccessflyResponse(
+            Users::_consult()->_all()->_cmsel()->_init()
+        );
     }
 
     public static function getUserById()
     {
-        $filter = DatabaseHelper::createFilterCondition("")->_eq("id", RequestHelper::getIdParam());
-        ResponseController::sentSuccessflyResponse(User::getUsers($filter));
+        ResponseController::sentSuccessflyResponse(
+            Users::_consult()->_all()->_cmsel()->_id(RequestHelper::getIdParam())->_init()
+        );
     }
 
     public static function getUserByAnyType()
     {
-        $filter = DatabaseHelper::createFilterCondition("")->_eq("id", RequestHelper::getIdParam());
-        $result = User::getUsers($filter);
+        $filter = Filter::_create()->_eq("id", RequestHelper::getIdParam());
+        $result = Users::_consult()->_rows('id,role')->_cmsel()->_filter($filter)->_init();
 
-        $filter_type = DatabaseHelper::createFilterCondition("")->_eq("user_id", RequestHelper::getIdParam());
+        $filter_type = Filter::_create()->_eq("user_id", RequestHelper::getIdParam());
 
         if (sizeof($result) > 0) {
             $user = $result[0];
             switch ($user['role']) {
                 case 'student':
-                    ResponseController::sentSuccessflyResponse(Student::getStudent($filter_type));
+                    ResponseController::sentSuccessflyResponse(
+                        Students::_consult()->_all()->_cmsel()->_filter($filter_type)->_init()
+                    );
                     break;
                 case 'enterprise':
-                    ResponseController::sentSuccessflyResponse(Enterprise::getEnterprise($filter_type));
+                    ResponseController::sentSuccessflyResponse(
+                        Enterprises::_consult()->_all()->_cmsel()->_filter($filter_type)->_init()
+                    );
                     break;
                 default:
-                    ResponseController::sentDatabaseErrorResponse('User role not defined');
+                    ResponseController::sentDatabaseErrorResponse('User has not role defined');
                     break;
             }
-        }else{
+        } else {
             ResponseController::sentDatabaseErrorResponse('User not found');
         }
     }
 
     public static function insertUser()
     {
-        $data = User::insertUser(null);
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(
+            Users::_insert(null)->_init()
+        );
     }
 
     public static function updateUser()
     {
-        $data = User::updateUser(null);
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(
+            Users::_update(null)->_id(RequestHelper::getIdParam())->_init()
+        );
     }
 
     public static function deleteUser()
     {
-        $data = User::deleteUser();
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(
+            Users::_delete()->_id(RequestHelper::getIdParam())->_init()
+        );
     }
 
     public static function userLogin()
     {
-        $data = User::userLogin();
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Users::userLogin());
     }
 
     public static function userRegister()
     {
-        $data = User::userRegister();
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Users::userRegister());
     }
 
     public static function userLogout()
     {
-        $data = User::userLogout();
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Users::userLogout());
     }
 }

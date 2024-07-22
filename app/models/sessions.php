@@ -2,12 +2,10 @@
 
 namespace App\Models;
 
-use App\Controllers\General\DataBaseController;
 use App\Controllers\General\ResponseController;
-use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
 
-class Session
+class Sessions extends Model
 {
     public $id;
     public $user_id;
@@ -28,22 +26,6 @@ class Session
         $this->user_role = $user_role;
     }
 
-    public static function getSession($filter)
-    {
-        $sql = DatabaseHelper::createFilterRows("sessions", "s")->_all()->_cmsel()->addFilter($filter);
-        return DataBaseController::executeConsult($sql);
-    }
-
-    public static function insertSession($data)
-    {
-        return DataBaseController::executeInsert('sessions', Session::class, $data);
-    }
-
-    public static function deleteSession($filter)
-    {
-        return DataBaseController::executeDelete('sessions', $filter);
-    }
-
     public static function validateSession($role)
     {
         $sessionResponse = new \stdClass;
@@ -53,19 +35,20 @@ class Session
         if ($cookie == null)
             ResponseController::sentBadRequestResponse('Session cookie not provided');
 
-        $filter = DatabaseHelper::createFilterCondition("")->_eq("cookie", $cookie);
-        $result = Session::getSession($filter);
+        $result = Sessions::_consult()->_all()->_cmsel()->_filter(
+            Filter::_create()->_eq('cookie', $cookie)
+        )->_init();
 
         if (count($result) == 0) {
             RequestHelper::deleteCookie('session');
-            ResponseController::sentNotFoundResponse('Session not found');
+            ResponseController::sentBadRequestResponse('Session not found');
         } else {
             $session = $result[0];
 
             if ($session['user_role'] != $role && $role != 'any')
                 ResponseController::sentBadRequestResponse('User is not authorized');
 
-            $sessionResponse->code = Session::$SESSION_VALID_CODE;
+            $sessionResponse->code = Sessions::$SESSION_VALID_CODE;
             $sessionResponse->message = 'Session is valid';
             $sessionResponse->user_id = $result[0]['user_id'];
             $sessionResponse->role = $result[0]['user_role'];
@@ -81,11 +64,8 @@ class Session
         $cookie = RequestHelper::createCookie(50, 'session');
         $ip = RequestHelper::getIPAddress();
 
-        $session = new Session(null, $user_id, $session_date, $cookie, $ip, $role);
-
-        $fields = DatabaseHelper::extractParams(Session::class, $session, 'insert');
-
-        $result = Session::insertSession($fields);
+        $session = new Sessions(null, $user_id, $session_date, $cookie, $ip, $role);
+        $result = Sessions::_insert($session)->_init();
 
         $session->id = $result->id;
 
@@ -98,9 +78,8 @@ class Session
         RequestHelper::deleteCookie('session');
 
         if ($session == null)
-            ResponseController::sentBadRequestResponse('Session is not provided');
+            ResponseController::sentBadRequestResponse('Session has not provided');
 
-        $filter = DatabaseHelper::createFilterCondition('')->_eq('cookie', $session);
-        Session::deleteSession($filter);
+        Sessions::_delete()->_filter(Filter::_create()->_eq('cookie', $session))->_init();
     }
 }

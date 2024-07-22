@@ -1,15 +1,17 @@
 <?php
 #MODELS
+require_once __DIR__ . '/../app/models/filter.php';
+require_once __DIR__ . '/../app/models/model.php';
 require_once __DIR__ . '/../app/models/response.php';
-require_once __DIR__ . '/../app/models/user.php';
-require_once __DIR__ . '/../app/models/student.php';
-require_once __DIR__ . '/../app/models/enterprise.php';
-require_once __DIR__ . '/../app/models/session.php';
+require_once __DIR__ . '/../app/models/users.php';
+require_once __DIR__ . '/../app/models/students.php';
+require_once __DIR__ . '/../app/models/enterprises.php';
+require_once __DIR__ . '/../app/models/sessions.php';
 require_once __DIR__ . '/../app/models/careers.php';
 require_once __DIR__ . '/../app/models/faculties.php';
-require_once __DIR__ . '/../app/models/contact.php';
-require_once __DIR__ . '/../app/models/conversation.php';
-require_once __DIR__ . '/../app/models/message.php';
+require_once __DIR__ . '/../app/models/contacts.php';
+require_once __DIR__ . '/../app/models/conversations.php';
+require_once __DIR__ . '/../app/models/messages.php';
 
 #CONTROLLERS
 require_once __DIR__ . '/../app/controllers/general/dataBaseController.php';

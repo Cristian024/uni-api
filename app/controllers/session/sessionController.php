@@ -2,47 +2,49 @@
 namespace App\Controllers\Session;
 
 use App\Controllers\General\ResponseController;
-use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
-use App\Models\Session;
+use App\Models\Sessions;
 
 class SessionController{
     public static function getAllSessions(){
-        ResponseController::sentSuccessflyResponse(Session::getSession(null));
+        ResponseController::sentSuccessflyResponse(
+            Sessions::_consult()->_all()->_cmsel()->_init()
+        );
     }
 
     public static function getSessionById(){
-        $filter = DatabaseHelper::createFilterCondition("")->_eq("id", RequestHelper::getIdParam());
-        ResponseController::sentSuccessflyResponse(Session::getSession($filter));
+        ResponseController::sentSuccessflyResponse(
+            Sessions::_consult()->_all()->_cmsel()->_id(RequestHelper::getIdParam())->_init()
+        );
     }
 
     public static function getSessionByUserId(){
-        $filter = DatabaseHelper::createFilterCondition("")->_eq("user_id", RequestHelper::getIdParam());
-        ResponseController::sentSuccessflyResponse(Session::getSession($filter));
+        ResponseController::sentSuccessflyResponse(
+            Sessions::_consult()->_all()->_cmsel()->_row('user_id', RequestHelper::getIdParam())->_init()
+        );
     }
 
     public static function deleteSessionById(){
-        $data = Session::deleteSession('id');
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(
+            Sessions::_delete()->_id(RequestHelper::getIdParam())->_init()
+        );
     }
 
     public static function deleteSessionByUserId(){
-        $data = Session::deleteSession('user_id');
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(
+            Sessions::_delete()->_row('user_id', RequestHelper::getIdParam())->_init()
+        );
     }
 
     public static function validateSessionStudent(){
-        $data = Session::validateSession('student');
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Sessions::validateSession('student'));
     }
 
     public static function validateSessionEnterprise(){
-        $data = Session::validateSession('enterprise');
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Sessions::validateSession('enterprise'));
     }
 
     public static function validateSessionAny(){
-        $data = Session::validateSession('any');
-        ResponseController::sentSuccessflyResponse($data);
+        ResponseController::sentSuccessflyResponse(Sessions::validateSession('any'));
     }
 }

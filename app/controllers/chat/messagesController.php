@@ -3,10 +3,10 @@
 namespace App\Controllers\Chat;
 
 use App\Controllers\General\ResponseController;
-use App\Helpers\DatabaseHelper;
 use App\Helpers\RequestHelper;
-use App\Models\Conversation;
-use App\Models\Message;
+use App\Models\Conversations;
+use App\Models\Messages;
+use App\Models\Filter;
 
 class MessagesController
 {
@@ -27,14 +27,15 @@ class MessagesController
         $limit = $params['limit'];
         $offset = $params['offset'];
 
-        $filter = DatabaseHelper::createFilterCondition('')->_eq('conversation_id', $id)->_ordas('cdate')->_lim($limit)->_off($offset);
-        ResponseController::sentSuccessflyResponse(Message::getMessage($filter));
+        $filter = Filter::_create()->_eq('conversation_id', $id)->_ordas('cdate')->_lim($limit)->_off($offset);
+        ResponseController::sentSuccessflyResponse(
+            Messages::_consult()->_all()->_cmsel()->_filter($filter)->_init()
+        );
     }
 
     public static function insertMessage()
     {
-        global $queryId;
-        $rs_inserMsg = Message::insertMessage(null);
+        $rs_inserMsg = Messages::_insert(null)->_init();
 
         $params = RequestHelper::getParams();
 
@@ -43,9 +44,7 @@ class MessagesController
         $conv_upd->last_message_date = $params['cdate'];
         $conv_upd->last_message_from = $params['user_post'];
 
-        $queryId = $params['conversation_id'];
-
-        Conversation::updateConversation(DatabaseHelper::extractParams(Conversation::class, $conv_upd, 'update'));
+        Conversations::_update($conv_upd)->_id(RequestHelper::getIdParam())->_init();
 
         ResponseController::sentSuccessflyResponse($rs_inserMsg);
     }

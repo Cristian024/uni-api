@@ -10,8 +10,6 @@ class DataBaseController
 {
     public static function executeConsult($sql)
     {
-        global $queryId;
-
         $connection = new Database();
         try {
 
@@ -59,13 +57,8 @@ class DataBaseController
         }
     }
 
-    public static function executeUpdate($table, $entity, $fields)
+    public static function executeUpdate($table, $entity, $fields, $filter)
     {
-        global $queryId;
-
-        if ($queryId == null)
-            ResponseController::sentBadRequestResponse('ID is required');
-
         $connection = new Database();
         try {
             if ($fields === null)
@@ -83,7 +76,7 @@ class DataBaseController
                 $count++;
             }
 
-            $sql .= " WHERE id = $queryId";
+            $sql .= " WHERE " . $filter->getSql();
 
             $result = $connection->query($sql);
 
@@ -101,18 +94,12 @@ class DataBaseController
         }
     }
 
-    public static function executeDelete($table, $filter)
+    public static function executeDelete($sql)
     {
-        global $queryId;
-
-        if ($queryId == null)
-            ResponseController::sentBadRequestResponse('ID is required');
-
         $connection = new Database();
         try {
-            $sql = DatabaseHelper::createDeleteFilter('sessions')->addFilter($filter)->getSql();
 
-            $result = $connection->query($sql);
+            $result = $connection->query($sql->getSql());
 
             if ($result) {
                 $deleteClass = new \stdClass;

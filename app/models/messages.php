@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Controllers\General\DataBaseController;
 use App\Helpers\DatabaseHelper;
 
-class Message
+class Messages extends Model
 {
     public $id;
     public $conversation_id;
@@ -24,19 +24,8 @@ class Message
         $this->state = $state;
     }
 
-    public static function getMessage($filter)
-    {
-        $sql = DatabaseHelper::createFilterRows('messages', 'm')->_all()->_cmsel()->addFilter($filter);
-        return DataBaseController::executeConsult($sql);
-    }
-
     public static function getCountMessages($filter)
     {
-        $sql = DatabaseHelper::createFilterRows('messages', 'm')->_rows('COUNT(id) AS count_messages')->_cmsel()->addFilter($filter);
-        return DataBaseController::executeConsult($sql);
-    }
-    public static function insertMessage($data)
-    {
-        return DataBaseController::executeInsert('messages', Message::class, $data);
+        return Messages::_consult()->_rows('COUNT(id) AS count_messages')->_cmsel()->_filter($filter)->_init();
     }
 }

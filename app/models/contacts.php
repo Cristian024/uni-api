@@ -2,11 +2,7 @@
 
 namespace App\Models;
 
-use App\Controllers\General\DataBaseController;
-use App\Helpers\DatabaseHelper;
-use App\Helpers\RequestHelper;
-
-class Contact
+class Contacts extends Model
 {
     public $id;
     public $user_id;
@@ -21,8 +17,7 @@ class Contact
 
     public static function getContacts($filter)
     {
-        $sql = DatabaseHelper::createFilterRows("contacts", "c")->_all()->_cmsel()->addFilter($filter);
-        $result = DataBaseController::executeConsult($sql);
+        $result = Contacts::_consult()->_all()->_cmsel()->_filter($filter)->_init();
 
         $contacts = [];
 
@@ -32,11 +27,13 @@ class Contact
 
             if (sizeof($contacts) > 0) {
                 foreach ($contacts as $index => $contact) {
-                    $filter_u = DatabaseHelper::createFilterCondition('')->_eq('user_id', $contact->user_id);
+                    $filter_u = Filter::_create()->_eq('user_id', $contact->user_id);
                     $result_c = null;
 
-                    $result_e = Enterprise::getEnterprise($filter_u);
-                    $result_s = Student::getStudent($filter_u);
+                    $result_e = Enterprises::_consult()->_rows('enterprises.*,users.role')->_cmsel()->
+                    _injoin('users', 'id', 'user_id')->_filter($filter_u)->_init();
+                    $result_s = Students::_consult()->_rows('students.*,users.role')->_cmsel()->
+                    _injoin('users', 'id', 'user_id')->_filter($filter_u)->_init();
 
                     if (sizeof($result_e) > 0) {
                         $result_c = $result_e[0];
@@ -48,8 +45,8 @@ class Contact
                     $last_message_date = null;
                     $last_message_from = null;
                     if ($contact->conversation_id != null) {
-                        $filter_c = DatabaseHelper::createFilterCondition('')->_eq('id', $contact->conversation_id);
-                        $result_co = Conversation::getConversation($filter_c);
+                        $filter_c = Filter::_create()->_eq('id', $contact->conversation_id);
+                        $result_co = Conversations::_consult()->_all()->_cmsel()->_filter($filter_c)->_init();
 
                         if (sizeof($result_co) > 0) {
                             $conversation = $result_co[0];
@@ -60,6 +57,7 @@ class Contact
                     }
 
                     $contacts_c[] = $result_c;
+
                     $contacts[$index]->contact_info = $contacts_c;
                     $contacts[$index]->last_message = $last_message;
                     $contacts[$index]->last_message_date = $last_message_date;
@@ -71,10 +69,5 @@ class Contact
         }else{
             return $contacts;
         }
-    }
-
-    public static function updateContacts($data)
-    {
-        return DataBaseController::executeUpdate('contacts', Contact::class, $data);
     }
 }

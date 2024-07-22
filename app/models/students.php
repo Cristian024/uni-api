@@ -2,10 +2,7 @@
 
 namespace App\Models;
 
-use App\Controllers\General\DataBaseController;
-use App\Helpers\DatabaseHelper;
-
-class Student
+class Students extends Model
 {
     public $id;
     public $first_name;
@@ -32,27 +29,5 @@ class Student
         $this->faculty = $faculty;
         $this->semester = $semester;
         $this->user_id = $user_id;
-    }
-
-    public static function getStudent($filter)
-    {
-        $sql = DatabaseHelper::createFilterRows("students", "s")->_rows("s.*,users.email,users.role")->_cmsel()
-        ->_injoin("user_id", "id", "users")->addFilter($filter);
-        return DataBaseController::executeConsult($sql);
-    }
-
-    public static function insertStudent($data)
-    {
-        return DataBaseController::executeInsert('students', Student::class, $data);
-    }
-
-    public static function updateStudent($data)
-    {
-        return DataBaseController::executeUpdate('students', Student::class, $data);
-    }
-
-    public static function deleteUser()
-    {
-        return DataBaseController::executeDelete('students', 'id');
     }
 }
