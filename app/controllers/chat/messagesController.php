@@ -44,7 +44,7 @@ class MessagesController
         $conv_upd->last_message_date = $params['cdate'];
         $conv_upd->last_message_from = $params['user_post'];
 
-        Conversations::_update($conv_upd)->_id(RequestHelper::getIdParam())->_init();
+        Conversations::_update($conv_upd)->_id($params['conversation_id'])->_init();
 
         ResponseController::sentSuccessflyResponse($rs_inserMsg);
     }

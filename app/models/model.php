@@ -127,7 +127,7 @@ class Model
 
             public function _filter($filter)
             {
-                $this->filter = $filter;
+                $this->filter = $filter->getSql();
                 return $this;
             }
 

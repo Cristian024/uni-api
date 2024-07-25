@@ -76,8 +76,8 @@ class DataBaseController
                 $count++;
             }
 
-            $sql .= " WHERE " . $filter->getSql();
-
+            $sql .= $filter;
+            
             $result = $connection->query($sql);
 
             if ($result) {
