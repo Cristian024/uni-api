@@ -21,6 +21,6 @@ class ContactsController
 
     public static function updateContacts()
     {
-        ResponseController::sentSuccessflyResponse(Contacts::_update(null)->_id(RequestHelper::getIdParam())->_init());
+        ResponseController::sentSuccessflyResponse(Contacts::_update()->_id(RequestHelper::getIdParam())->_init());
     }
 }

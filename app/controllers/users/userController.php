@@ -64,7 +64,7 @@ class UserController
     public static function updateUser()
     {
         ResponseController::sentSuccessflyResponse(
-            Users::_update(null)->_id(RequestHelper::getIdParam())->_init()
+            Users::_update()->_id(RequestHelper::getIdParam())->_init()
         );
     }
 

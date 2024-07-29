@@ -32,7 +32,7 @@ class EnterpriseController{
 
     public static function updateEnterprise(){
         ResponseController::sentSuccessflyResponse(
-            Enterprises::_update(null)->_id(RequestHelper::getIdParam())->_init()
+            Enterprises::_update()->_id(RequestHelper::getIdParam())->_init()
         );
     }
 }

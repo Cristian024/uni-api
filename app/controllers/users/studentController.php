@@ -46,7 +46,7 @@ class StudentController
     public static function updateStudent()
     {
         ResponseController::sentSuccessflyResponse(
-            Students::_update(null)->_id(RequestHelper::getIdParam())->_init()
+            Students::_update()->_id(RequestHelper::getIdParam())->_init()
         );
     }
 

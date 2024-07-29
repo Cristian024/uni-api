@@ -44,8 +44,39 @@ class MessagesController
         $conv_upd->last_message_date = $params['cdate'];
         $conv_upd->last_message_from = $params['user_post'];
 
-        Conversations::_update($conv_upd)->_id($params['conversation_id'])->_init();
+        Conversations::_update()->_data($conv_upd)->_id($params['conversation_id'])->_init();
 
-        ResponseController::sentSuccessflyResponse($rs_inserMsg);
+        ResponseController::sentSuccessflyResponse($rs_inserMsg->id);
+    }
+
+    public static function updateMessageStateList()
+    {
+        $params = RequestHelper::getParams();
+
+        if (!isset($params['state']))
+            ResponseController::sentBadRequestResponse('State field is required');
+
+        if (!isset($params['list']))
+            ResponseController::sentBadRequestResponse('Messages list is required');
+
+        $state = $params['state'];
+        $list = $params['list'];
+        $message_ids = [];
+
+        foreach ($list as $message) {
+            if (isset($message['id'])) {
+                $message_ids[] = $message['id'];
+            }
+        }
+
+        $filter = Filter::_create()->_in('id', $message_ids);
+        $result = Messages::_update()->_column('state', $state)->_filter($filter)->_init();
+
+        $response = new \stdClass;
+        $response->affected_rows = $result->affected_rows;
+        $response->messages = $message_ids;
+        $response->state = $state;
+
+        ResponseController::sentSuccessflyResponse($response);
     }
 }

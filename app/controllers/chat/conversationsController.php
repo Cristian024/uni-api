@@ -60,7 +60,7 @@ class ConversationsController
 
     public static function updateConversation(){
         ResponseController::sentSuccessflyResponse(
-            Conversations::_update(null)->_id(RequestHelper::getIdParam())->_init()
+            Conversations::_update()->_id(RequestHelper::getIdParam())->_init()
         );
     }
 }

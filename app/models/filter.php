@@ -2,7 +2,8 @@
 
 namespace App\Models;
 
-class Filter{
+class Filter
+{
     public static function _create()
     {
         return new class () {
@@ -112,6 +113,12 @@ class Filter{
             public function _off($offset)
             {
                 $this->sql .= " OFFSET " . $offset . "";
+                return $this;
+            }
+
+            public function _in($column,$list)
+            {   
+                $this->sql .= " $column IN (" . implode(', ', $list) . ") ";
                 return $this;
             }
 

@@ -98,5 +98,6 @@ class Routes
     public function routeMessages(){
         Router::post('message_by_conversation', [MessagesController::class, 'getMessagesByConversationId']);
         Router::post('message', [MessagesController::class, 'insertMessage']);
+        Router::put('messages_state_list', [MessagesController::class, 'updateMessageStateList']);
     }
 }

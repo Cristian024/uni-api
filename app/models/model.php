@@ -106,28 +106,37 @@ class Model
         };
     }
 
-    public static function _update($data)
+    public static function _update()
     {
         $class = get_called_class();
         $table = static::getTableName();
-        return new class ($data, $class, $table) {
+        return new class ($class, $table) {
             private $fields = null;
             private $class;
             private $table;
             private $filter;
 
-            public function __construct($data, $class, $table)
+            public function __construct($class, $table)
             {
                 $this->table = $table;
                 $this->class = $class;
-                if ($data != null) {
-                    $this->fields = DatabaseHelper::extractParams($class, $data, 'update');
-                }
+            }
+
+            public function _column($column, $value)
+            {
+                $this->fields = [[$column],["'".$value."'"]];
+                return $this;
+            }
+
+            public function _data($data)
+            {
+                $this->fields = DatabaseHelper::extractParams($this->class, $data, 'update');
+                return $this;
             }
 
             public function _filter($filter)
             {
-                $this->filter = $filter->getSql();
+                $this->filter = " WHERE " . $filter->getSql();
                 return $this;
             }
 
