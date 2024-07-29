@@ -116,8 +116,8 @@ class Filter
                 return $this;
             }
 
-            public function _in($column,$list)
-            {   
+            public function _in($column, $list)
+            {
                 $this->sql .= " $column IN (" . implode(', ', $list) . ") ";
                 return $this;
             }

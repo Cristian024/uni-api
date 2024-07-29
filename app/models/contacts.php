@@ -27,19 +27,7 @@ class Contacts extends Model
 
             if (sizeof($contacts) > 0) {
                 foreach ($contacts as $index => $contact) {
-                    $filter_u = Filter::_create()->_eq('user_id', $contact->user_id);
-                    $result_c = null;
-
-                    $result_e = Enterprises::_consult()->_rows('enterprises.*,users.role')->_cmsel()->
-                        _injoin('users', 'id', 'user_id')->_filter($filter_u)->_init();
-                    $result_s = Students::_consult()->_rows('students.*,users.role')->_cmsel()->
-                        _injoin('users', 'id', 'user_id')->_filter($filter_u)->_init();
-
-                    if (sizeof($result_e) > 0) {
-                        $result_c = $result_e[0];
-                    } else if (sizeof($result_s) > 0) {
-                        $result_c = $result_s[0];
-                    }
+                    $result_c = Contacts::getContactInfo($contact->user_id);
 
                     $last_message = null;
                     $last_message_date = null;
@@ -50,7 +38,7 @@ class Contacts extends Model
 
                         if (sizeof($result_co) > 0) {
                             $conversation = $result_co[0];
-                            
+
                             $last_message = $conversation['last_message'];
                             $last_message_date = $conversation['last_message_date'];
                             $last_message_from = $conversation['last_message_from'];
@@ -69,7 +57,7 @@ class Contacts extends Model
                         }
                     }
 
-                    $contacts_c[] = $result_c;
+                    $contacts_c[] = $result_c[0];
 
                     $contacts[$index]->contact_info = $contacts_c;
                     $contacts[$index]->last_message = $last_message;
@@ -82,5 +70,20 @@ class Contacts extends Model
         } else {
             return $contacts;
         }
+    }
+
+    public static function getContactInfo($user_id)
+    {
+        return Users::_consult()->_rows("users.id AS 'user_id',users.role,")->_case()->
+            _when('users.role', 'student', "CONCAT(students.first_name,' ',students.last_name)")->
+            _when('users.role', 'enterprise', 'enterprises.name')->
+            _else('NULL')->
+            _ecase('name')->
+            _cmsel()->
+            _lejoin('students', 'user_id', 'id')->
+            _lejoin('enterprises', 'user_id', 'id')->
+            _row('users.id', $user_id)->
+            _init();
+
     }
 }

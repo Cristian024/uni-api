@@ -45,6 +45,12 @@ class Model
                 return $this;
             }
 
+            public function _lejoin($ljoin, $trowleft, $row)
+            {
+                $this->sql .= " LEFT JOIN $ljoin ON $this->table.$row = $ljoin.$trowleft ";
+                return $this;
+            }
+
             public function _cmsel()
             {
                 $this->sql .= " FROM $this->table";
@@ -70,10 +76,35 @@ class Model
                 return $this;
             }
 
+            public function _case()
+            {
+                $this->sql .= " CASE ";
+                return $this;
+            }
+
+            public function _ecase($nick)
+            {
+                $this->sql .= " END AS '$nick'";
+                return $this;
+            }
+
+            public function _when($col, $row, $then)
+            {
+                $this->sql .= " WHEN $col = '$row' THEN $then";
+                return $this;
+            }
+
+            public function _else($value)
+            {
+                $this->sql .= " ELSE $value ";
+                return $this;
+            }
+
             public function getSql()
             {
                 return $this->sql;
             }
+
             public function _init()
             {
                 return DataBaseController::executeConsult($this);
@@ -124,7 +155,7 @@ class Model
 
             public function _column($column, $value)
             {
-                $this->fields = [[$column],["'".$value."'"]];
+                $this->fields = [[$column], ["'" . $value . "'"]];
                 return $this;
             }
 
