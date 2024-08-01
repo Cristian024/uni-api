@@ -32,7 +32,8 @@ class StudentController
     public static function getStudentByUserId()
     {
         ResponseController::sentSuccessflyResponse(
-            Students::_consult()->_all()->_cmsel()->_row('user_id', RequestHelper::getIdParam())->_init()
+            Students::_consult()->_rows('students.*,users.email')->_cmsel()->_injoin('users', 'id', 'user_id')->
+                _row('user_id', RequestHelper::getIdParam())->_init()
         );
     }
 
