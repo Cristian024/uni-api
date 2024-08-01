@@ -26,6 +26,7 @@ class Conversations extends Model
 
     public static function getConversationByUsers($data)
     {
+        global $queryId;
         if ($data != null) {
             $params = $data;
             if (!isset($params->user_one_id))
@@ -55,16 +56,13 @@ class Conversations extends Model
         $result = Conversations::_consult()->_all()->_cmsel()->_filter($filter)->_init();
 
         if (sizeof($result) > 0) {
-            global $queryId;
             $queryId = $result[0]['id'];
             return Conversations::getConversationById();
         } else {
             $c_conversation = new Conversations(null, $user_one, $user_two, null, null, null);
             $result_i = Conversations::_insert($c_conversation)->_init();
-            $result_c = Conversations::_consult()->_all()->_cmsel()->_id($result_i->id)->_init();
-
-            $converation = $result_c[0];
-            return $converation;
+            $queryId = $result_i->id;
+            return Conversations::getConversationById();
         }
     }
 
@@ -78,7 +76,7 @@ class Conversations extends Model
         $conversation = Conversations::_consult()->_all()->_cmsel()->_filter($filter_c)->_init();
         $count_messages = Messages::getCountMessages($filter_m);
 
-        $conversation_obj->count_messages = $count_messages[0]['count_messages'];
+        $conversation_obj->count_messages = (int) $count_messages[0]['count_messages'];
         $conversation_obj->conversation = $conversation[0];
         return $conversation_obj;
     }

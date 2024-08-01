@@ -27,7 +27,7 @@ class MessagesController
         $limit = $params['limit'];
         $offset = $params['offset'];
 
-        $filter = Filter::_create()->_eq('conversation_id', $id)->_ordas('cdate')->_lim($limit)->_off($offset);
+        $filter = Filter::_create()->_eq('conversation_id', $id)->_ordes('cdate')->_lim($limit)->_off($offset);
         ResponseController::sentSuccessflyResponse(
             Messages::_consult()->_all()->_cmsel()->_filter($filter)->_init()
         );
