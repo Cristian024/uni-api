@@ -48,10 +48,17 @@ class Sessions extends Model
             if ($session['user_role'] != $role && $role != 'any')
                 ResponseController::sentBadRequestResponse('User is not authorized');
 
-            $sessionResponse->code = Sessions::$SESSION_VALID_CODE;
-            $sessionResponse->message = 'Session is valid';
-            $sessionResponse->user_id = $result[0]['user_id'];
-            $sessionResponse->role = $result[0]['user_role'];
+            $user = Users::_consult()->_all()->_cmsel()->_id($session['user_id'])->_init();
+
+            if (sizeof($user) > 0) {
+                $sessionResponse->code = Sessions::$SESSION_VALID_CODE;
+                $sessionResponse->message = 'Session is valid';
+                $sessionResponse->user_id = $session['user_id'];
+                $sessionResponse->role = $session['user_role'];
+            } else{
+                RequestHelper::deleteCookie('session');
+                ResponseController::sentBadRequestResponse('User not found');
+            }
         }
 
         return $sessionResponse;
