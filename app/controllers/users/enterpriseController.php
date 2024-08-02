@@ -25,7 +25,7 @@ class EnterpriseController
     public static function getEnterpriseByUserId()
     {
         ResponseController::sentSuccessflyResponse(
-            Enterprises::_consult()->_rows('students.*,users.email')->_cmsel()->_injoin('users', 'id', 'user_id')
+            Enterprises::_consult()->_rows('enterprises.*,users.email')->_cmsel()->_injoin('users', 'id', 'user_id')
                 ->_row('user_id', RequestHelper::getIdParam())->_init()
         );
     }
