@@ -28,7 +28,7 @@ class UserController
     public static function getUserByAnyType()
     {
         $filter = Filter::_create()->_eq("id", RequestHelper::getIdParam());
-        $result = Users::_consult()->_rows('id,role')->_cmsel()->_filter($filter)->_init();
+        $result = Users::_consult()->_rows('id,role,email')->_cmsel()->_filter($filter)->_init();
 
         $filter_type = Filter::_create()->_eq("user_id", RequestHelper::getIdParam());
 
@@ -36,13 +36,19 @@ class UserController
             $user = $result[0];
             switch ($user['role']) {
                 case 'student':
+                    $student = Students::_consult()->_all()->_cmsel()->_filter($filter_type)->_init();
+                    $student[0]['role'] = 'student';
+                    $student[0]['email'] = $user['email'];
                     ResponseController::sentSuccessflyResponse(
-                        Students::_consult()->_all()->_cmsel()->_filter($filter_type)->_init()
+                        $student
                     );
                     break;
                 case 'enterprise':
+                    $enterprise = Enterprises::_consult()->_all()->_cmsel()->_filter($filter_type)->_init();
+                    $enterprise[0]['role'] = 'enterprise';
+                    $enterprise[0]['email'] = $user['email'];
                     ResponseController::sentSuccessflyResponse(
-                        Enterprises::_consult()->_all()->_cmsel()->_filter($filter_type)->_init()
+                        $enterprise
                     );
                     break;
                 default:
