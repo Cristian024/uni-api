@@ -9,7 +9,7 @@ class ServerController {
     public static $methodsAllowed = ['GET', 'POST', 'DELETE', 'PUT'];
 
     public static function validateCorrectPetition(){
-        Credentials::useProduction(true);
+        Credentials::useProduction(false);
         ServerController::validateToken();
         ServerController::validateMethod();
         ServerController::validateRoute();
@@ -19,7 +19,7 @@ class ServerController {
         $headers = getallheaders();
         if($headers === null || $headers === '') ResponseController::sentBadRequestResponse('Headers not provided');
         if(!isset($headers['access-token']) && !isset($headers['access-token'])) ResponseController::sentBadRequestResponse('Access token not provided');
-        if($headers['access-token'] != $_ENV['ACCESS_TOKEN']) ResponseController::sentUnauthorizedResponse('Incorrect Token');
+        if($headers['access-token'] != Credentials::$ACCESS_TOKEN) ResponseController::sentUnauthorizedResponse('Incorrect Token');
     }
 
     public static function validateMethod(){

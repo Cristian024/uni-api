@@ -10,11 +10,11 @@ class Database extends \mysqli
     {
         try {
             parent::__construct(
-                $_ENV['SERVER'],
-                $_ENV['USER'],
-                $_ENV['PASSWORD'],
-                $_ENV['DATABASE'],
-                $_ENV['PORT']
+                Credentials::$SERVER,
+                Credentials::$USER,
+                Credentials::$PASSWORD,
+                Credentials::$DATABASE,
+                Credentials::$PORT
             );
             $this->set_charset('utf8');
             $this->connect_error != null ? ResponseController::sentDatabaseErrorResponse($this->error) : '';
