@@ -33,7 +33,5 @@ class Credentials
             Credentials::$PORT = $_ENV['PORT'];
             Credentials::$ACCESS_TOKEN = $_ENV['ACCESS_TOKEN'];
         }
-        
     }
-
 }
