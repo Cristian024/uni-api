@@ -9,6 +9,7 @@ class ServerController {
     public static $methodsAllowed = ['GET', 'POST', 'DELETE', 'PUT'];
 
     public static function validateCorrectPetition(){
+        Credentials::useProduction(true);
         ServerController::validateToken();
         ServerController::validateMethod();
         ServerController::validateRoute();

@@ -14,13 +14,25 @@ class Credentials
     public static $ACCESS_TOKEN = "Fq0830jA9h5pEeAvdTW5wDglb9JFqBju5RDtls5xKGVVXJAPOwto3bB5ivvVU14E";
     */
 
-    
+
     ####DEV####
-    public static $SERVER = "localhost";
-    public static $USER = "root";
+    public static $SERVER = "";
+    public static $USER = "";
     public static $PASSWORD = "";
-    public static $DATABASE = "uniapi";
-    public static $PORT = "3306";
-    public static $ACCESS_TOKEN = "Fq0830jA9h5pEeAvdTW5wDglb9JFqBju5RDtls5xKGVVXJAPOwto3bB5ivvVU14E";
-    
+    public static $DATABASE = "";
+    public static $PORT = "";
+    public static $ACCESS_TOKEN = "";
+
+    public static function useProduction($useProduction)
+    {
+        if($useProduction){
+            Credentials::$SERVER = $_ENV['SERVER'];
+            Credentials::$USER = $_ENV['USER'];
+            Credentials::$PASSWORD = $_ENV['PASSWORD'];
+            Credentials::$DATABASE = $_ENV['DATABASE'];
+            Credentials::$PORT = $_ENV['PORT'];
+            Credentials::$ACCESS_TOKEN = $_ENV['ACCESS_TOKEN'];
+        }
+    }
+
 }
