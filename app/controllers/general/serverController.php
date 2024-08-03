@@ -3,6 +3,7 @@
 namespace App\Controllers\General;
 
 use App\Controllers\General\ResponseController;
+use Config\Credentials;
 
 class ServerController {
     public static $methodsAllowed = ['GET', 'POST', 'DELETE', 'PUT'];

@@ -27,6 +27,8 @@ require_once __DIR__ . '/../app/controllers/users/contactsController.php';
 require_once __DIR__ . '/../app/controllers/chat/conversationsController.php';
 require_once __DIR__ . '/../app/controllers/chat/messagesController.php';
 
+require_once __DIR__ . '/../config/credentials.php';
+
 #DATABASE
 require_once __DIR__ . '/../config/database.php';
 
