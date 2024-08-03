@@ -3,10 +3,14 @@
 namespace App;
 
 require_once __DIR__ . '/../config/imports.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\General\ServerController;
 use App\Routes\Routes;
 use App\Services\Router;
+
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
 
 ServerController::validateCorrectPetition();
 

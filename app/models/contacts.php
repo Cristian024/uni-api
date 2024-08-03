@@ -29,40 +29,45 @@ class Contacts extends Model
                 foreach ($contacts as $index => $contact) {
                     $result_c = Contacts::getContactInfo($contact->user_id);
 
-                    $last_message = null;
-                    $last_message_date = null;
-                    $last_message_from = null;
-                    if ($contact->conversation_id != null) {
-                        $filter_c = Filter::_create()->_eq('id', $contact->conversation_id);
-                        $result_co = Conversations::_consult()->_all()->_cmsel()->_filter($filter_c)->_init();
+                    if (sizeof($result_c) > 0) {
+                        $last_message = null;
+                        $last_message_date = null;
+                        $last_message_from = null;
+                        if ($contact->conversation_id != null) {
+                            $filter_c = Filter::_create()->_eq('id', $contact->conversation_id);
+                            $result_co = Conversations::_consult()->_all()->_cmsel()->_filter($filter_c)->_init();
 
-                        if (sizeof($result_co) > 0) {
-                            $conversation = $result_co[0];
+                            if (sizeof($result_co) > 0) {
+                                $conversation = $result_co[0];
 
-                            $last_message = $conversation['last_message'];
-                            $last_message_date = $conversation['last_message_date'];
-                            $last_message_from = $conversation['last_message_from'];
-                        } else {
-                            $users = new \stdClass;
-                            $users->user_one_id = $result[0]['user_id'];
-                            $users->user_two_id = $contact->user_id;
-                            $conversation = Conversations::getConversationByUsers($users);
+                                $last_message = $conversation['last_message'];
+                                $last_message_date = $conversation['last_message_date'];
+                                $last_message_from = $conversation['last_message_from'];
+                            } else {
+                                $users = new \stdClass;
+                                $users->user_one_id = $result[0]['user_id'];
+                                $users->user_two_id = $contact->user_id;
+                                $conversation = Conversations::getConversationByUsers($users);
 
-                            $contacts[$index]->conversation_id = $conversation->conversation['id'];
-                            Contacts::_update()->_column('contacts', json_encode($contacts))->_id($result[0]['id'])->_init();
+                                $contacts[$index]->conversation_id = $conversation->conversation['id'];
+                                Contacts::_update()->_column('contacts', json_encode($contacts))->_id($result[0]['id'])->_init();
 
-                            $last_message = $conversation->conversation['last_message'];
-                            $last_message_date = $conversation->conversation['last_message_date'];
-                            $last_message_from = $conversation->conversation['last_message_from'];
+                                $last_message = $conversation->conversation['last_message'];
+                                $last_message_date = $conversation->conversation['last_message_date'];
+                                $last_message_from = $conversation->conversation['last_message_from'];
+                            }
                         }
+
+                        $contacts_c[] = $result_c[0];
+
+                        $contacts[$index]->contact_info = $contacts_c;
+                        $contacts[$index]->last_message = $last_message;
+                        $contacts[$index]->last_message_date = $last_message_date;
+                        $contacts[$index]->last_message_from = $last_message_from;
+                    }else{
+                        $contacts[$index]->error = 'User not found';
+                        $contacts[$index]->contact_info = null;
                     }
-
-                    $contacts_c[] = $result_c[0];
-
-                    $contacts[$index]->contact_info = $contacts_c;
-                    $contacts[$index]->last_message = $last_message;
-                    $contacts[$index]->last_message_date = $last_message_date;
-                    $contacts[$index]->last_message_from = $last_message_from;
                 }
             }
 
@@ -84,6 +89,5 @@ class Contacts extends Model
             _lejoin('enterprises', 'user_id', 'id')->
             _row('users.id', $user_id)->
             _init();
-
     }
 }

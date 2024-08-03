@@ -3,7 +3,6 @@
 namespace App\Controllers\General;
 
 use App\Controllers\General\ResponseController;
-use Config\Credentials;
 
 class ServerController {
     public static $methodsAllowed = ['GET', 'POST', 'DELETE', 'PUT'];
@@ -18,7 +17,7 @@ class ServerController {
         $headers = getallheaders();
         if($headers === null || $headers === '') ResponseController::sentBadRequestResponse('Headers not provided');
         if(!isset($headers['access-token']) && !isset($headers['access-token'])) ResponseController::sentBadRequestResponse('Access token not provided');
-        if($headers['access-token'] != Credentials::$ACCESS_TOKEN) ResponseController::sentUnauthorizedResponse('Incorrect Token');
+        if($headers['access-token'] != $_ENV['ACCESS_TOKEN']) ResponseController::sentUnauthorizedResponse('Incorrect Token');
     }
 
     public static function validateMethod(){
