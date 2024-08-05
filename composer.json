@@ -1,0 +1,15 @@
+{
+    "name": "dleon/uni-api",
+    "autoload": {
+        "psr-4": {
+            "Dleon\\UniApi\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Cristian024",
+            "email": "dleonrobledo@gmail.com"
+        }
+    ],
+    "require": {}
+}

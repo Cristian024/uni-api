@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Controllers\Users;
+
+use App\Controllers\General\ResponseController;
+use App\Helpers\RequestHelper;
+use App\Models\Contacts;
+use App\Models\Conversations;
+use App\Models\Enterprises;
+use App\Models\Filter;
+use App\Models\Students;
+
+class ContactsController
+{
+    public static function getContactsByUserId()
+    {
+        try{
+            ResponseController::sentSuccessflyResponse(
+                Contacts::getContacts(Filter::_create()->_eq('user_id', RequestHelper::getIdParam()))    
+            );
+        }catch (\UnexpectedValueException $e){
+            ResponseController::sentBadRequestResponse($e->getMessage());
+        }catch(\Exception $e){
+            ResponseController::sentInternalErrorResponse($e->getMessage());
+        }
+    }
+
+    public static function updateContacts()
+    {
+        ResponseController::sentSuccessflyResponse(Contacts::_update()->_id(RequestHelper::getIdParam())->_init());
+    }
+}
