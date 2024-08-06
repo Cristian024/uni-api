@@ -11,9 +11,9 @@ class DatabaseHelper
             $data = RequestHelper::getParams();
             return DatabaseHelper::extractParams($entity, $data, $method);
         } catch (\UnexpectedValueException $e) {
-            throw new \UnexpectedValueException("Body not provided");
-        } catch (\Exception $e){
-            throw new \Exception($e);
+            throw new \UnexpectedValueException($e->getMessage());
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -37,11 +37,13 @@ class DatabaseHelper
                 }
                 $count++;
             } else if ($key !== 'id') {
-                throw new \Exception("$entity.Class: param $key is not accepted");
+                throw new \UnexpectedValueException("$entity.Class: param $key is not accepted");
             }
         }
 
         if (count($attributes) - 1 != $count && $method == 'insert') {
+            throw new \Exception("$entity.Class: Missing params");
+        } else if ($count == 0 && $method == 'update') {
             throw new \Exception("$entity.Class: Missing params");
         } else {
             return [$columns, $values];

@@ -11,7 +11,15 @@ class UserEvent extends EventModel
 {
     public static function getUsers()
     {
-        static::executeEvent(new EventModel('', '{}', 'users', 'GET', '{}'));
+        static::executeEvent(
+            new EventModel(
+                '',
+                '{}',
+                'users',
+                'GET',
+                '{}'
+            )
+        );
     }
 
     public static function insertUser()
@@ -31,10 +39,49 @@ class UserEvent extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/1',
+                '/56',
                 '{}',
                 'any_by_user_id',
                 'GET',
+                '{}'
+            )
+        );
+    }
+
+    public static function getUserById()
+    {
+        static::executeEvent(
+            new EventModel(
+                '/56',
+                '{}',
+                'user',
+                'GET',
+                '{}'
+            )
+        );
+    }
+
+    public static function deleteUser()
+    {
+        static::executeEvent(
+            new EventModel(
+                '/56',
+                '{}',
+                'users',
+                'DELETE',
+                '{}'
+            )
+        );
+    }
+
+    public static function updateUser()
+    {
+        static::executeEvent(
+            new EventModel(
+                '/56',
+                '{}',
+                'users',
+                'PUT',
                 '{}'
             )
         );

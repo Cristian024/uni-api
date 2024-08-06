@@ -23,13 +23,20 @@ class EventModel
 
     public static function constructEvent(EventModel $testModel)
     {
+        if(is_array($testModel->body) || is_object($testModel->body)){
+            $body = json_encode($testModel->body);
+        }else if(is_string($testModel->body)){
+            $body = json_decode($testModel->body, true);
+            $body = json_encode($body);
+        }
+
         $event = [
             "rawPath" => "/".$testModel->rawPath,
             "cookies" => json_decode($testModel->cookies, true),
             "headers" => json_decode('{"access-token": "Fq0830jA9h5pEeAvdTW5wDglb9JFqBju5RDtls5xKGVVXJAPOwto3bB5ivvVU14E"}', true),
             "queryStringParameters" => json_decode('{"route": "' . $testModel->route . '"}', true),
             "requestContext" => json_decode('{"http":{"method":"' . $testModel->method . '"}}', true),
-            "body" => json_encode($testModel->body)
+            "body" => $body
         ];
 
         echo "\n Evento a ejecutar:" . json_encode($event) . "\n";

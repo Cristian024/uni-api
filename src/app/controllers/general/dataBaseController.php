@@ -4,7 +4,6 @@ namespace App\Controllers\General;
 
 use Config\Database;
 use App\Helpers\DatabaseHelper;
-use App\Controllers\General\ResponseController;
 
 class DataBaseController
 {
@@ -62,8 +61,8 @@ class DataBaseController
 
     public static function executeUpdate($table, $entity, $fields, $filter)
     {
-        $connection = new Database();
         try {
+            $connection = new Database();
             if ($fields === null)
                 $fields = DatabaseHelper::getParams($entity, 'update');
 
@@ -88,19 +87,21 @@ class DataBaseController
                 $updateClass->affected_rows = $connection->affected_rows;
                 return $updateClass;
             } else {
-                ResponseController::sentDatabaseErrorResponse($connection->error);
+                throw new \PDOException($connection->error);
             }
         } catch (\PDOException $e) {
-            ResponseController::sentDatabaseErrorResponse($e->getMessage());
+            throw new \PDOException($e->getMessage());
+        } catch (\UnexpectedValueException $e) {
+            throw new \UnexpectedValueException($e->getMessage());
         } catch (\Exception $e) {
-            ResponseController::sentInternalErrorResponse($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 
     public static function executeDelete($sql)
     {
-        $connection = new Database();
         try {
+            $connection = new Database();
 
             $result = $connection->query($sql->getSql());
 
@@ -109,12 +110,12 @@ class DataBaseController
                 $deleteClass->affected_rows = $connection->affected_rows;
                 return $deleteClass;
             } else {
-                ResponseController::sentDatabaseErrorResponse($connection->error);
+                throw new \PDOException($connection->error);
             }
         } catch (\PDOException $e) {
-            ResponseController::sentDatabaseErrorResponse($e->getMessage());
+            throw new \PDOException($e->getMessage());
         } catch (\Exception $e) {
-            ResponseController::sentInternalErrorResponse($e->getMessage());
+            throw new \Exception($e->getMessage());
         }
     }
 }

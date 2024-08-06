@@ -71,7 +71,7 @@ class UserController
             }
         } catch (\UnexpectedValueException $e) {
             ResponseController::sentBadRequestResponse($e->getMessage());
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             ResponseController::sentInternalErrorResponse($e->getMessage());
         }
     }
@@ -91,16 +91,32 @@ class UserController
 
     public static function updateUser()
     {
-        ResponseController::sentSuccessflyResponse(
-            Users::_update()->_id(RequestHelper::getIdParam())->_init()
-        );
+        try {
+            ResponseController::sentSuccessflyResponse(
+                Users::_update()->_id(RequestHelper::getIdParam())->_init()
+            );
+        } catch (\UnexpectedValueException $e) {
+            ResponseController::sentBadRequestResponse($e->getMessage());
+        } catch (\PDOException $e) {
+            ResponseController::sentDatabaseErrorResponse($e->getMessage());
+        } catch (\Exception $e) {
+            ResponseController::sentInternalErrorResponse($e->getMessage());
+        }
     }
 
     public static function deleteUser()
     {
-        ResponseController::sentSuccessflyResponse(
-            Users::_delete()->_id(RequestHelper::getIdParam())->_init()
-        );
+        try {
+            ResponseController::sentSuccessflyResponse(
+                Users::_delete()->_id(RequestHelper::getIdParam())->_init()
+            );
+        } catch (\UnexpectedValueException $e) {
+            ResponseController::sentBadRequestResponse($e->getMessage());
+        } catch (\PDOException $e){
+            ResponseController::sentDatabaseErrorResponse($e->getMessage());
+        } catch (\Exception $e){
+            ResponseController::sentInternalErrorResponse($e->getMessage());
+        }
     }
 
     public static function userLogin()
