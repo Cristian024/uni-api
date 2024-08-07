@@ -7,17 +7,19 @@ use Exception;
 
 class RequestHelper
 {
+    public static $EVENT = null;
     public static $HEADERS = null;
     public static $BODY = null;
     public static $PARAMS = null;
     public static $COOKIES = null;
     public static $QUERYID = null;
+    public static $HTTP = null;
 
     public static function getParams()
     {
-        if(RequestHelper::$BODY === null){
+        if (RequestHelper::$BODY === null) {
             throw new \UnexpectedValueException("Body not provided");
-        }else{
+        } else {
             return RequestHelper::$BODY;
         }
     }
@@ -35,18 +37,10 @@ class RequestHelper
     public static function getIPAddress()
     {
         $ipaddress = '';
-        if (isset($_SERVER['HTTP_CLIENT_IP']))
-            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-        else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-        else if (isset($_SERVER['HTTP_X_FORWARDED']))
-            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-        else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
-            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-        else if (isset($_SERVER['HTTP_FORWARDED']))
-            $ipaddress = $_SERVER['HTTP_FORWARDED'];
-        else if (isset($_SERVER['REMOTE_ADDR']))
-            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        if (RequestHelper::$HTTP === null)
+            $ipaddress = 'UNKNOWN';
+        else if (isset(RequestHelper::$HTTP['sourceIp']))
+            $ipaddress = RequestHelper::$HTTP['sourceIp'];
         else
             $ipaddress = 'UNKNOWN';
         return $ipaddress;

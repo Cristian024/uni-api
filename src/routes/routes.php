@@ -2,12 +2,15 @@
 
 namespace App\Routes;
 
+use App\Controllers\General\ResponseController;
+use App\Controllers\General\ServerController;
 use App\Controllers\Chat\ConversationsController;
 use App\Controllers\Chat\MessagesController;
 use App\Controllers\Faculties\CareersController;
 use App\Controllers\Faculties\FacultiesController;
 use App\Controllers\Users\EnterpriseController;
 use App\Controllers\Users\studentController;
+use App\Helpers\RequestHelper;
 use App\Services\Router;
 use App\Controllers\Users\UserController;
 use App\Controllers\Session\SessionController;
@@ -26,6 +29,12 @@ class Routes
         $this->routeContacts();
         $this->routeConversations();
         $this->routeMessages();
+        $this->routeEvent();
+    }
+
+
+    public function routeEvent(){
+        Router::get('event', [ServerController::class, 'event']);
     }
 
     public function routeUsers()
@@ -89,13 +98,15 @@ class Routes
         Router::put("enterprise", [EnterpriseController::class, "updateEnterprise"]);
     }
 
-    public function routeConversations(){
+    public function routeConversations()
+    {
         Router::get('conversation', [ConversationsController::class, 'getConversationById']);
         Router::post('conversation_by_users', [ConversationsController::class, 'getConversationByUsers']);
         Router::put('conversation', [ConversationsController::class, 'updateConversation']);
     }
 
-    public function routeMessages(){
+    public function routeMessages()
+    {
         Router::post('message_by_conversation', [MessagesController::class, 'getMessagesByConversationId']);
         Router::post('message', [MessagesController::class, 'insertMessage']);
         Router::put('messages_state_list', [MessagesController::class, 'updateMessageStateList']);

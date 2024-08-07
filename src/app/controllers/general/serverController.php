@@ -25,8 +25,15 @@ class ServerController
         }
     }
 
+    public static function getEvent()
+    {
+        return RequestHelper::$EVENT;
+    }
+
     public static function validateIncomingEvent($event)
     {
+        RequestHelper::$EVENT = $event;
+
         if (!isset($event['queryStringParameters'])) {
             throw new \BadMethodCallException("Query String parameters not provided ");
         } else {
@@ -37,8 +44,13 @@ class ServerController
             throw new \BadMethodCallException("Request context not provided ");
         } else {
             $requestContext = $event['requestContext'];
-            if (!isset($requestContext['http']['method'])) {
-                throw new \BadMethodCallException("Request method not privided ");
+            if (isset($requestContext['http'])) {
+                RequestHelper::$HTTP = $requestContext['http'];
+                if (!isset($requestContext['http']['method'])) {
+                    throw new \BadMethodCallException("Request method not privided ");
+                }
+            }else{
+                throw new \BadMethodCallException("Access HTTP info not provided ");
             }
         }
 
@@ -56,12 +68,12 @@ class ServerController
             RequestHelper::$COOKIES = $event['cookies'];
         }
 
-        if(isset($event['rawPath'])) {
+        if (isset($event['rawPath'])) {
             $path = isset($event['rawPath']) ? $event['rawPath'] : '/';
             $idExplode = explode('/', $path);
             $queryId = ($path !== '/') ? end($idExplode) : null;
             RequestHelper::$QUERYID = $queryId;
-        }      
+        }
     }
 
     public static function validateToken($event)
