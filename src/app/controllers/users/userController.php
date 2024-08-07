@@ -121,7 +121,13 @@ class UserController
 
     public static function userLogin()
     {
-        ResponseController::sentSuccessflyResponse(Users::userLogin());
+        try {
+            ResponseController::sentSuccessflyResponse(Users::userLogin());    
+        } catch (\UnexpectedValueException $e) {
+            ResponseController::sentBadRequestResponse($e->getMessage());
+        } catch (\Exception $e){
+            ResponseController::sentInternalErrorResponse($e->getMessage());
+        }
     }
 
     public static function userRegister()

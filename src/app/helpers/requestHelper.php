@@ -66,7 +66,9 @@ class RequestHelper
     {
         $cookie = substr(bin2hex(random_bytes($long)), 0, $long);
 
-        setcookie($key, $cookie, time() + 3600000000, '/');
+        $cookieHeader = "$key=$cookie; Path=/; HttpOnly; Secure; SameSite=Strict";
+
+        ResponseController::$COOKIES_TO_SEND[] = $cookieHeader;
 
         return $cookie;
     }

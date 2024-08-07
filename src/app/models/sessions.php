@@ -55,7 +55,7 @@ class Sessions extends Model
                 $sessionResponse->message = 'Session is valid';
                 $sessionResponse->user_id = $session['user_id'];
                 $sessionResponse->role = $session['user_role'];
-            } else{
+            } else {
                 RequestHelper::deleteCookie('session');
                 ResponseController::sentBadRequestResponse('User not found');
             }
@@ -66,17 +66,21 @@ class Sessions extends Model
 
     public static function createSession($user_id, $role)
     {
-        date_default_timezone_set('America/Bogota');
-        $session_date = date('Y/m/d H:i:s');
-        $cookie = RequestHelper::createCookie(50, 'session');
-        $ip = RequestHelper::getIPAddress();
+        try {
+            date_default_timezone_set('America/Bogota');
+            $session_date = date('Y/m/d H:i:s');
+            $cookie = RequestHelper::createCookie(50, 'session');
+            $ip = RequestHelper::getIPAddress();
 
-        $session = new Sessions(null, $user_id, $session_date, $cookie, $ip, $role);
-        $result = Sessions::_insert($session)->_init();
+            $session = new Sessions(null, $user_id, $session_date, $cookie, $ip, $role);
+            $result = Sessions::_insert($session)->_init();
 
-        $session->id = $result->id;
+            $session->id = $result->id;
 
-        return $session;
+            return $session;
+        } catch (\Exception $e) {
+            throw new \Exception('Error al crear la sesiónn');
+        }
     }
 
     public static function closeSession($user)

@@ -68,29 +68,35 @@ class Users extends Model
 
     public static function userLogin()
     {
-        $loginResponse = new \stdClass;
+        try {
+            $loginResponse = new \stdClass;
 
-        $params = RequestHelper::getParams();
+            $params = RequestHelper::getParams();
 
-        if (!isset($params['query']))
-            ResponseController::sentBadRequestResponse('Query parameters not provided (id, name or email)');
+            if (!isset($params['query']))
+                throw new \UnexpectedValueException('Query parameters not provided (id, name or email)');
 
-        if (!isset($params['password']))
-            ResponseController::sentBadRequestResponse('Password not provided');
+            if (!isset($params['password']))
+                throw new \UnexpectedValueException('Password not provided');
 
-        $user = Users::userExists($params['query']);
+            $user = Users::userExists($params['query']);
 
-        if ($user == null) {
-            ResponseController::sentNotFoundResponse('User not found');
-        } else if (md5($params['password']) != $user['password']) {
-            ResponseController::sentBadRequestResponse('Incorrect password');
-        } else {
-            $session = Sessions::createSession($user['id'], $user['role']);
-            $loginResponse->message = 'Session successfully created';
-            $loginResponse->session = $session;
+            if ($user == null) {
+                throw new \Exception('User not found');
+            } else if (md5($params['password']) != $user['password']) {
+                throw new \UnexpectedValueException('Incorrect password');
+            } else { 
+                $session = Sessions::createSession($user['id'], $user['role']);
+                $loginResponse->message = 'Session successfully created';
+                $loginResponse->session = $session;
+            }
+
+            return $loginResponse;
+        } catch (\UnexpectedValueException $e) {
+            throw new \UnexpectedValueException($e->getMessage());
+        } catch (\Exception $e){
+            throw new \Exception($e->getMessage());
         }
-
-        return $loginResponse;
     }
 
     public static function userLogout()
@@ -111,13 +117,17 @@ class Users extends Model
 
     private static function userExists($row)
     {
-        $filter = Filter::_create()->_eq('id', $row)->_or()->_eq('email', $row);
-        $result = Users::_consult()->_all()->_cmsel()->_filter($filter)->_init();
+        try {
+            $filter = Filter::_create()->_eq('id', $row)->_or()->_eq('email', $row);
+            $result = Users::_consult()->_all()->_cmsel()->_filter($filter)->_init();
 
-        if (count($result) == 0) {
-            return null;
-        } else {
-            return $result[0];
+            if (count($result) == 0) {
+                return null;
+            } else {
+                return $result[0];
+            }
+        } catch (\Exception $e) {
+            throw new \Exception('Error in determining the existence of the user');
         }
     }
 }

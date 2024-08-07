@@ -86,5 +86,18 @@ class UserEvent extends EventModel
             )
         );
     }
+
+    public static function login()
+    {
+        static::executeEvent(
+            new EventModel(
+                '',
+                '{}',
+                'login',
+                'POST',
+                '{"query": "cdrobledo@unimayor.edu.co","password": "123456"}'
+            )
+        );
+    }
 }
 

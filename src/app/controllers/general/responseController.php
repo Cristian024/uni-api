@@ -5,8 +5,9 @@ namespace App\Controllers\General;
 use App\Models\Response;
 
 class ResponseController
-
 {
+    public static $COOKIES_TO_SEND = [];
+
     public static function sentSuccessflyResponse($data)
     {
         ResponseController::returnResponse(
@@ -105,13 +106,25 @@ class ResponseController
 
     private static function returnResponse(Response $response)
     {
+        $cookies = ResponseController::$COOKIES_TO_SEND;
+        $headers = [
+            'Content-Type' => 'application/json'
+        ];
+
+        if (sizeof($cookies) > 0) {
+            foreach ($cookies as $cookie) {
+                $headers['Set-Cookie'] = $cookie;
+            }
+        }
+
         echo json_encode([
             'statusCode' => $response->code,
+            'headers' => $headers,
             'body' => json_encode([
                 'status' => 'error',
                 'error' => $response->error,
                 'data' => $response->data
-            ], JSON_FORCE_OBJECT)
+            ])
         ]);
     }
 }
