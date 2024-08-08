@@ -112,9 +112,9 @@ class UserController
             );
         } catch (\UnexpectedValueException $e) {
             ResponseController::sentBadRequestResponse($e->getMessage());
-        } catch (\PDOException $e){
+        } catch (\PDOException $e) {
             ResponseController::sentDatabaseErrorResponse($e->getMessage());
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             ResponseController::sentInternalErrorResponse($e->getMessage());
         }
     }
@@ -122,21 +122,33 @@ class UserController
     public static function userLogin()
     {
         try {
-            ResponseController::sentSuccessflyResponse(Users::userLogin());    
+            ResponseController::sentSuccessflyResponse(Users::userLogin());
         } catch (\UnexpectedValueException $e) {
             ResponseController::sentBadRequestResponse($e->getMessage());
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             ResponseController::sentInternalErrorResponse($e->getMessage());
         }
     }
 
     public static function userRegister()
     {
-        ResponseController::sentSuccessflyResponse(Users::userRegister());
+        try {
+            ResponseController::sentSuccessflyResponse(Users::userRegister());
+        } catch (\UnexpectedValueException $e) {
+            ResponseController::sentBadRequestResponse($e->getMessage());
+        } catch (\Exception $e) {
+            ResponseController::sentInternalErrorResponse($e->getMessage());
+        }
     }
 
     public static function userLogout()
     {
-        ResponseController::sentSuccessflyResponse(Users::userLogout());
+        try {
+            ResponseController::sentSuccessflyResponse(Users::userLogout());
+        } catch (\UnexpectedValueException $th) {
+            ResponseController::sentBadRequestResponse($th->getMessage());
+        } catch (\Exception $e){
+            ResponseController::sentInternalErrorResponse($e->getMessage());
+        } 
     }
 }

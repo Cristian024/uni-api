@@ -7,7 +7,7 @@ require __DIR__ . '/eventModel.php';
 use Test\EventModel;
 use App\Models\Users;
 
-class UserEvent extends EventModel
+class AllEvents extends EventModel
 {
     public static function getUsers()
     {
@@ -99,5 +99,30 @@ class UserEvent extends EventModel
             )
         );
     }
-}
 
+    public static function logout()
+    {
+        static::executeEvent(
+            new EventModel(
+                '',
+                '["session=5dd48a611413739c37843e49fb70c004c47486845bfe665e1e"]',
+                'logout',
+                'POST',
+                '{"user_id":"33"}'
+            )
+        );
+    }
+
+    public static function sessions()
+    {
+        static::executeEvent(
+            new EventModel(
+                '',
+                '[]',
+                'sessions',
+                'GET',
+                '{}'
+            )
+        );
+    }
+}

@@ -2,7 +2,6 @@
 
 namespace App\Routes;
 
-use App\Controllers\General\ResponseController;
 use App\Controllers\General\ServerController;
 use App\Controllers\Chat\ConversationsController;
 use App\Controllers\Chat\MessagesController;
@@ -10,7 +9,6 @@ use App\Controllers\Faculties\CareersController;
 use App\Controllers\Faculties\FacultiesController;
 use App\Controllers\Users\EnterpriseController;
 use App\Controllers\Users\studentController;
-use App\Helpers\RequestHelper;
 use App\Services\Router;
 use App\Controllers\Users\UserController;
 use App\Controllers\Session\SessionController;
@@ -34,7 +32,7 @@ class Routes
 
 
     public function routeEvent(){
-        Router::get('event', [ServerController::class, 'event']);
+        Router::get('event', [ServerController::class, 'getEvent']);
     }
 
     public function routeUsers()

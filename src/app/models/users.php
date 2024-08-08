@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Controllers\General\ResponseController;
 use App\Helpers\RequestHelper;
 
 class Users extends Model
@@ -32,28 +31,35 @@ class Users extends Model
         $params = RequestHelper::getParams();
 
         if (!isset($params['password']))
-            ResponseController::sentBadRequestResponse('Password not provided');
+            throw new \UnexpectedValueException('Password not provided');
 
         if (!isset($params['role']))
-            ResponseController::sentBadRequestResponse('Role not provided');
+            throw new \UnexpectedValueException('Role not provided');
 
         if (!isset($params['email']))
-            ResponseController::sentBadRequestResponse('Email not provided');
+            throw new \UnexpectedValueException('Email not provided');
 
         $userExists = Users::userExists($params['email']);
 
         if ($userExists != null) {
-            ResponseController::sentBadRequestResponse('User already exists');
+            throw new \Exception('User already exists');
         } else {
+            if ($params['role'] != 'student' || $params['role'] != 'enterprise') {
+                throw new \UnexpectedValueException("The role " . $params['role'] . " is not accepted");
+            }
+
             $user = new Users(null, $params['email'], md5($params['password']), date('Y-m-d H:i:s'), $params['role'], 'active', true);
             $response = Users::_insert($user)->_init();
 
-            if ($params['role'] == 'student') {
-                $student = new Students(null, null, null, null, null, null, null, null, null, null, $response->id);
-                Students::_insert($student)->_init();
-            } else if ($params['role'] == "enterprise") {
-                $enterprise = new Enterprises(null, null, null, null, null, null, $response->id);
-                Enterprises::_insert($enterprise)->_init();
+            switch ($params['role']) {
+                case 'student':
+                    $student = new Students(null, null, null, null, null, null, null, null, null, null, $response->id);
+                    Students::_insert($student)->_init();
+                    break;
+                case 'role':
+                    $enterprise = new Enterprises(null, null, null, null, null, null, $response->id);
+                    Enterprises::_insert($enterprise)->_init();
+                    break;
             }
 
             $session = Sessions::createSession($response->id, $params['role']);
@@ -68,35 +74,29 @@ class Users extends Model
 
     public static function userLogin()
     {
-        try {
-            $loginResponse = new \stdClass;
+        $loginResponse = new \stdClass;
 
-            $params = RequestHelper::getParams();
+        $params = RequestHelper::getParams();
 
-            if (!isset($params['query']))
-                throw new \UnexpectedValueException('Query parameters not provided (id, name or email)');
+        if (!isset($params['query']))
+            throw new \UnexpectedValueException('Query parameters not provided (id, name or email)');
 
-            if (!isset($params['password']))
-                throw new \UnexpectedValueException('Password not provided');
+        if (!isset($params['password']))
+            throw new \UnexpectedValueException('Password not provided');
 
-            $user = Users::userExists($params['query']);
+        $user = Users::userExists($params['query']);
 
-            if ($user == null) {
-                throw new \Exception('User not found');
-            } else if (md5($params['password']) != $user['password']) {
-                throw new \UnexpectedValueException('Incorrect password');
-            } else { 
-                $session = Sessions::createSession($user['id'], $user['role']);
-                $loginResponse->message = 'Session successfully created';
-                $loginResponse->session = $session;
-            }
-
-            return $loginResponse;
-        } catch (\UnexpectedValueException $e) {
-            throw new \UnexpectedValueException($e->getMessage());
-        } catch (\Exception $e){
-            throw new \Exception($e->getMessage());
+        if ($user == null) {
+            throw new \Exception('User not found');
+        } else if (md5($params['password']) != $user['password']) {
+            throw new \UnexpectedValueException('Incorrect password');
+        } else {
+            $session = Sessions::createSession($user['id'], $user['role']);
+            $loginResponse->message = 'Session successfully created';
+            $loginResponse->session = $session;
         }
+
+        return $loginResponse;
     }
 
     public static function userLogout()
@@ -106,7 +106,7 @@ class Users extends Model
         $params = RequestHelper::getParams();
 
         if (!isset($params['user_id'])) {
-            ResponseController::sentBadRequestResponse('User not provided');
+            throw new \UnexpectedValueException('User not provided');
         }
 
         Sessions::closeSession($params['user_id']);

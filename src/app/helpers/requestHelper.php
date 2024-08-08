@@ -37,20 +37,28 @@ class RequestHelper
     public static function getIPAddress()
     {
         $ipaddress = '';
-        if (RequestHelper::$HTTP === null)
+
+        if (RequestHelper::$HTTP === null) {
             $ipaddress = 'UNKNOWN';
-        else if (isset(RequestHelper::$HTTP['sourceIp']))
+        } else if (isset(RequestHelper::$HTTP['sourceIp'])) {
             $ipaddress = RequestHelper::$HTTP['sourceIp'];
-        else
+        } else {
             $ipaddress = 'UNKNOWN';
+        }
+
         return $ipaddress;
     }
 
     public static function getCookie($key)
     {
         $cookie = null;
-        if (isset($_COOKIE[$key])) {
-            $cookie = $_COOKIE[$key];
+        if (RequestHelper::$COOKIES == null)
+            throw new \UnexpectedValueException('Cookies not provided');
+
+        foreach (RequestHelper::$COOKIES as $cookieF) {
+            if (isset($cookieF[$key])) {
+                $cookie = $cookieF[$key];
+            }
         }
 
         return $cookie;
@@ -60,7 +68,7 @@ class RequestHelper
     {
         $cookie = substr(bin2hex(random_bytes($long)), 0, $long);
 
-        $cookieHeader = "$key=$cookie; Path=/; HttpOnly; Secure; SameSite=Strict";
+        $cookieHeader = "$key=$cookie; Expires= " . (time() + 40000) . "; Path=/; HttpOnly; Secure; SameSite=Strict";
 
         ResponseController::$COOKIES_TO_SEND[] = $cookieHeader;
 
@@ -78,6 +86,7 @@ class RequestHelper
 
     public static function deleteCookie($key)
     {
-        setcookie($key, "", time() - 3600, "/");
+        $cookie = "$key=; Expires= " . (time() - 3600) . "; Path=/; HttpOnly; Secure; SameSite=Strict";
+        ResponseController::$COOKIES_TO_SEND[] = $cookie;
     }
 }

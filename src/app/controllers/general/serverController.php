@@ -27,7 +27,7 @@ class ServerController
 
     public static function getEvent()
     {
-        return RequestHelper::$EVENT;
+        ResponseController::sentSuccessflyResponse(RequestHelper::$COOKIES);
     }
 
     public static function validateIncomingEvent($event)
@@ -49,7 +49,7 @@ class ServerController
                 if (!isset($requestContext['http']['method'])) {
                     throw new \BadMethodCallException("Request method not privided ");
                 }
-            }else{
+            } else {
                 throw new \BadMethodCallException("Access HTTP info not provided ");
             }
         }
@@ -65,7 +65,14 @@ class ServerController
         }
 
         if (isset($event['cookies'])) {
-            RequestHelper::$COOKIES = $event['cookies'];
+            $cookies = $event['cookies'];
+            $cookiesTS = [];
+            foreach ($cookies as $key => $value) {
+                $explode = explode("=", $value);
+                $cookie = [$explode[0] => $explode[1]];
+                $cookiesTS[$key] = $cookie;
+            }
+            RequestHelper::$COOKIES = $cookiesTS;
         }
 
         if (isset($event['rawPath'])) {
@@ -98,7 +105,6 @@ class ServerController
         if (!in_array($method, ServerController::$methodsAllowed)) {
             throw new \BadMethodCallException("Method " . $event['requestContext']['http']['method'] . " is not allowed");
         }
-
     }
 
     public static function validateRoute($event)

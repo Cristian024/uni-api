@@ -89,7 +89,7 @@ class Sessions extends Model
         RequestHelper::deleteCookie('session');
 
         if ($session == null)
-            ResponseController::sentBadRequestResponse('Session has not provided');
+            throw new \UnexpectedValueException('Session has not provided');
 
         Sessions::_delete()->_filter(Filter::_create()->_eq('cookie', $session))->_init();
     }
