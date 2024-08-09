@@ -52,7 +52,7 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/56',
+                '/33',
                 '{}',
                 'user',
                 'GET',
@@ -120,6 +120,45 @@ class AllEvents extends EventModel
                 '',
                 '[]',
                 'sessions',
+                'GET',
+                '{}'
+            )
+        );
+    }
+
+    public static function session()
+    {
+        static::executeEvent(
+            new EventModel(
+                '/33',
+                '[]',
+                'session_by_user_id',
+                'GET',
+                '{}'
+            )
+        );
+    }
+
+    public static function contactsByUser()
+    {
+        static::executeEvent(
+            new EventModel(
+                '/33',
+                '[]',
+                'contacts_by_user_id',
+                'GET',
+                '{}'
+            )
+        );
+    }
+
+    public static function students()
+    {
+        static::executeEvent(
+            new EventModel(
+                '/5',
+                '[]',
+                'student',
                 'GET',
                 '{}'
             )

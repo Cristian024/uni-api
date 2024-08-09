@@ -19,10 +19,14 @@ function main($event)
 
         new Routes();
         Router::dispatch($method, $params['route']);
-        
+
     } catch (\BadMethodCallException $e) {
         ResponseController::sentBadRequestResponse($e->getMessage());
-    } catch (\Exception $e){
+    } catch (\UnexpectedValueException $e) {
+        ResponseController::sentBadRequestResponse($e->getMessage());
+    } catch (\PDOException $e) {
+        ResponseController::sentDatabaseErrorResponse($e->getMessage());
+    } catch (\Exception $e) {
         ResponseController::sentInternalErrorResponse($e->getMessage());
     }
 

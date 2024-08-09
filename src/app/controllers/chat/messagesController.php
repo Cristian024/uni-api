@@ -15,13 +15,13 @@ class MessagesController
         $params = RequestHelper::getParams();
 
         if (!isset($params['conversation_id']))
-            ResponseController::sentBadRequestResponse('Conversation id is required');
+            throw new \UnexpectedValueException('Conversation id is required');
 
         if (!isset($params['limit']))
-            ResponseController::sentBadRequestResponse('Limit is required');
+            throw new \UnexpectedValueException('Limit is required');
 
         if (!isset($params['offset']))
-            ResponseController::sentBadRequestResponse('Offset is required');
+            throw new \UnexpectedValueException('Offset is required');
 
         $id = $params['conversation_id'];
         $limit = $params['limit'];
@@ -54,10 +54,11 @@ class MessagesController
         $params = RequestHelper::getParams();
 
         if (!isset($params['state']))
-            ResponseController::sentBadRequestResponse('State field is required');
+            throw new \UnexpectedValueException('State field is required');
 
         if (!isset($params['list']))
-            ResponseController::sentBadRequestResponse('Messages list is required');
+            throw new \UnexpectedValueException('Messages list is required');
+
 
         $state = $params['state'];
         $list = $params['list'];

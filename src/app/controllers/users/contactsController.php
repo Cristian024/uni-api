@@ -14,15 +14,9 @@ class ContactsController
 {
     public static function getContactsByUserId()
     {
-        try{
-            ResponseController::sentSuccessflyResponse(
-                Contacts::getContacts(Filter::_create()->_eq('user_id', RequestHelper::getIdParam()))    
-            );
-        }catch (\UnexpectedValueException $e){
-            ResponseController::sentBadRequestResponse($e->getMessage());
-        }catch(\Exception $e){
-            ResponseController::sentInternalErrorResponse($e->getMessage());
-        }
+        ResponseController::sentSuccessflyResponse(
+            Contacts::getContacts(Filter::_create()->_eq('user_id', RequestHelper::getIdParam()))
+        );
     }
 
     public static function updateContacts()

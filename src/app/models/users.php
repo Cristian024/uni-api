@@ -42,7 +42,7 @@ class Users extends Model
         $userExists = Users::userExists($params['email']);
 
         if ($userExists != null) {
-            throw new \Exception('User already exists');
+            throw new \UnexpectedValueException('User already exists');
         } else {
             if ($params['role'] != 'student' || $params['role'] != 'enterprise') {
                 throw new \UnexpectedValueException("The role " . $params['role'] . " is not accepted");

@@ -2,6 +2,7 @@
 
 namespace App\Routes;
 
+use App\Controllers\General\ResponseController;
 use App\Controllers\General\ServerController;
 use App\Controllers\Chat\ConversationsController;
 use App\Controllers\Chat\MessagesController;
@@ -31,7 +32,8 @@ class Routes
     }
 
 
-    public function routeEvent(){
+    public function routeEvent()
+    {
         Router::get('event', [ServerController::class, 'getEvent']);
     }
 
@@ -58,7 +60,7 @@ class Routes
     {
         Router::get('sessions', [SessionController::class, 'getAllSessions']);
         Router::get('session', [SessionController::class, 'getSessionById']);
-        Router::get('session', [SessionController::class, 'getSessionByUserId']);
+        Router::get('session_by_user_id', [SessionController::class, 'getSessionByUserId']);
         Router::post('validateSessionStudent', [SessionController::class, 'validateSessionStudent']);
         Router::post('validateSessionEnterprise', [SessionController::class, 'validateSessionEnterprise']);
         Router::post('validateSessionAny', [SessionController::class, 'validateSessionAny']);

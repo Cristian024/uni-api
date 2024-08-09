@@ -72,7 +72,10 @@ class ServerController
                 $cookie = [$explode[0] => $explode[1]];
                 $cookiesTS[$key] = $cookie;
             }
-            RequestHelper::$COOKIES = $cookiesTS;
+
+            if (sizeof($cookiesTS) > 0) {
+                RequestHelper::$COOKIES = $cookiesTS;
+            }
         }
 
         if (isset($event['rawPath'])) {

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Controllers\General\ResponseController;
 use App\Helpers\RequestHelper;
 
 class Sessions extends Model
@@ -33,7 +32,7 @@ class Sessions extends Model
         $cookie = RequestHelper::getCookie('session');
 
         if ($cookie == null)
-            ResponseController::sentBadRequestResponse('Session cookie not provided');
+            throw new \UnexpectedValueException('Session cookie not provided');
 
         $result = Sessions::_consult()->_all()->_cmsel()->_filter(
             Filter::_create()->_eq('cookie', $cookie)
@@ -41,12 +40,12 @@ class Sessions extends Model
 
         if (count($result) == 0) {
             RequestHelper::deleteCookie('session');
-            ResponseController::sentBadRequestResponse('Session not found');
+            throw new \UnexpectedValueException('Session not found');
         } else {
             $session = $result[0];
 
             if ($session['user_role'] != $role && $role != 'any')
-                ResponseController::sentBadRequestResponse('User is not authorized');
+                throw new \UnexpectedValueException('User is not authorized');
 
             $user = Users::_consult()->_all()->_cmsel()->_id($session['user_id'])->_init();
 
@@ -57,7 +56,7 @@ class Sessions extends Model
                 $sessionResponse->role = $session['user_role'];
             } else {
                 RequestHelper::deleteCookie('session');
-                ResponseController::sentBadRequestResponse('User not found');
+                throw new \UnexpectedValueException('User not found');
             }
         }
 

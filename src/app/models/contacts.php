@@ -79,7 +79,7 @@ class Contacts extends Model
                 return $contacts;
             }
         } catch (Exception $e) {
-            throw new \PDOException("Internal Server Error: " . $e->getMessage());
+            throw new Exception("Internal Server Error: " . $e->getMessage());
         }
     }
 
