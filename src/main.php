@@ -4,6 +4,7 @@ require_once __DIR__ . '/config/imports.php';
 
 use App\Controllers\General\ResponseController;
 use App\Controllers\General\ServerController;
+use App\Helpers\RequestHelper;
 use App\Routes\Routes;
 use App\Services\Router;
 
@@ -14,12 +15,9 @@ function main($event)
     try {
         ServerController::validateCorrectPetition($event);
 
-        $params = $event['queryStringParameters'];
-        $method = $event['requestContext']['http']['method'];
-
         new Routes();
-        Router::dispatch($method, $params['route']);
-
+        Router::dispatch(RequestHelper::$HTTP, RequestHelper::$ROUTE);
+        
     } catch (\BadMethodCallException $e) {
         ResponseController::sentBadRequestResponse($e->getMessage());
     } catch (\UnexpectedValueException $e) {

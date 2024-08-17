@@ -15,9 +15,9 @@ class ServerController
         try {
             Credentials::useProduction(false);
             ServerController::validateIncomingEvent($event);
-            ServerController::validateToken($event);
-            ServerController::validateMethod($event);
-            ServerController::validateRoute($event);
+            ServerController::validateToken();
+            ServerController::validateMethod();
+            ServerController::validateRoute();
         } catch (\BadMethodCallException $e) {
             throw new \BadMethodCallException($e->getMessage());
         } catch (\Exception $e) {
@@ -38,19 +38,19 @@ class ServerController
             throw new \BadMethodCallException("Query String parameters not provided ");
         } else {
             RequestHelper::$PARAMS = $event['queryStringParameters'];
+            if(isset($event['queryStringParameters']['id'])){
+                RequestHelper::$QUERYID = $event['queryStringParameters']['id'];
+            }
         }
 
         if (!isset($event['requestContext'])) {
             throw new \BadMethodCallException("Request context not provided ");
         } else {
             $requestContext = $event['requestContext'];
-            if (isset($requestContext['http'])) {
-                RequestHelper::$HTTP = $requestContext['http'];
-                if (!isset($requestContext['http']['method'])) {
-                    throw new \BadMethodCallException("Request method not privided ");
-                }
+            if (isset($requestContext['httpMethod'])) {
+                RequestHelper::$HTTP = $requestContext['httpMethod'];
             } else {
-                throw new \BadMethodCallException("Access HTTP info not provided ");
+                throw new \BadMethodCallException("HTTP Method not provided");
             }
         }
 
@@ -64,8 +64,9 @@ class ServerController
             RequestHelper::$BODY = json_decode($event['body'], true);
         }
 
-        if (isset($event['cookies'])) {
-            $cookies = $event['cookies'];
+        if (isset($event['headers']['Cookie'])) {
+            $cookiesEvent = $event['headers']['Cookie'];
+            $cookies = explode(";", $cookiesEvent);
             $cookiesTS = [];
             foreach ($cookies as $key => $value) {
                 $explode = explode("=", $value);
@@ -77,18 +78,11 @@ class ServerController
                 RequestHelper::$COOKIES = $cookiesTS;
             }
         }
-
-        if (isset($event['rawPath'])) {
-            $path = isset($event['rawPath']) ? $event['rawPath'] : '/';
-            $idExplode = explode('/', $path);
-            $queryId = ($path !== '/') ? end($idExplode) : null;
-            RequestHelper::$QUERYID = $queryId;
-        }
     }
 
-    public static function validateToken($event)
+    public static function validateToken()
     {
-        $headers = $event['headers'];
+        $headers = RequestHelper::$HEADERS;
         if ($headers === null || $headers === '') {
             throw new \BadMethodCallException("Headers not provided");
         }
@@ -98,23 +92,25 @@ class ServerController
         }
 
         if ($headers['access-token'] != Credentials::$ACCESS_TOKEN) {
-            throw new \BadMethodCallException("Incorrecto token");
+            throw new \BadMethodCallException("Incorrect token");
         }
     }
 
-    public static function validateMethod($event)
+    public static function validateMethod()
     {
-        $method = $event['requestContext']['http']['method'];
+        $method = RequestHelper::$HTTP;
         if (!in_array($method, ServerController::$methodsAllowed)) {
-            throw new \BadMethodCallException("Method " . $event['requestContext']['http']['method'] . " is not allowed");
+            throw new \BadMethodCallException("Method " . RequestHelper::$HTTP . " is not allowed");
         }
     }
 
-    public static function validateRoute($event)
+    public static function validateRoute()
     {
-        $params = $event['queryStringParameters'];
+        $params = RequestHelper::$PARAMS;
         if (!isset($params['route'])) {
             throw new \BadMethodCallException("Route not provided");
+        }else{
+            RequestHelper::$ROUTE = $params['route'];
         }
     }
 }

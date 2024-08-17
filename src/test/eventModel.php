@@ -5,16 +5,13 @@ namespace Test;
 require __DIR__ . '/../main.php';
 class EventModel
 {
-
-    public $rawPath = null;
     public $cookies = null;
     public $route = null;
     public $method = null;
     public $body = null;
 
-    public function __construct($rawPath, $cookies, $route, $method, $body)
+    public function __construct($cookies, $route, $method, $body)
     {
-        $this->rawPath = $rawPath;
         $this->cookies = $cookies;
         $this->route = $route;
         $this->method = $method;
@@ -31,11 +28,9 @@ class EventModel
         }
 
         $event = [
-            "rawPath" => "/".$testModel->rawPath,
-            "cookies" => json_decode($testModel->cookies, true),
-            "headers" => json_decode('{"access-token": "Fq0830jA9h5pEeAvdTW5wDglb9JFqBju5RDtls5xKGVVXJAPOwto3bB5ivvVU14E"}', true),
+            "headers" => json_decode('{"access-token": "Fq0830jA9h5pEeAvdTW5wDglb9JFqBju5RDtls5xKGVVXJAPOwto3bB5ivvVU14E", "Cookie": "'.$testModel->cookies.'"}', true),
             "queryStringParameters" => json_decode('{"route": "' . $testModel->route . '"}', true),
-            "requestContext" => json_decode('{"http":{"method":"' . $testModel->method . '"}}', true),
+            "requestContext" => json_decode('{"httpMethod":"' . $testModel->method . '"}', true),
             "body" => $body
         ];
 

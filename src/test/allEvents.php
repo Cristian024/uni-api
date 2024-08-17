@@ -13,8 +13,7 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '',
-                '{}',
+                'Cookie_1=123',
                 'users',
                 'GET',
                 '{}'
@@ -26,7 +25,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '',
                 '{}',
                 'users',
                 'POST',
@@ -39,7 +37,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/56',
                 '{}',
                 'any_by_user_id',
                 'GET',
@@ -52,7 +49,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/33',
                 '{}',
                 'user',
                 'GET',
@@ -65,7 +61,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/56',
                 '{}',
                 'users',
                 'DELETE',
@@ -78,7 +73,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/56',
                 '{}',
                 'users',
                 'PUT',
@@ -91,7 +85,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '',
                 '{}',
                 'login',
                 'POST',
@@ -104,7 +97,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '',
                 '["session=5dd48a611413739c37843e49fb70c004c47486845bfe665e1e"]',
                 'logout',
                 'POST',
@@ -117,7 +109,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '',
                 '[]',
                 'sessions',
                 'GET',
@@ -130,7 +121,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/33',
                 '[]',
                 'session_by_user_id',
                 'GET',
@@ -143,7 +133,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/33',
                 '[]',
                 'contacts_by_user_id',
                 'GET',
@@ -156,7 +145,6 @@ class AllEvents extends EventModel
     {
         static::executeEvent(
             new EventModel(
-                '/5',
                 '[]',
                 'student',
                 'GET',

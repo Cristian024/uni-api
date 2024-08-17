@@ -14,6 +14,7 @@ class RequestHelper
     public static $COOKIES = null;
     public static $QUERYID = null;
     public static $HTTP = null;
+    public static $ROUTE = null;
 
     public static function getParams()
     {
