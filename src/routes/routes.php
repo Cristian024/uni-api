@@ -35,6 +35,7 @@ class Routes
     public function routeEvent()
     {
         Router::get('event', [ServerController::class, 'getEvent']);
+        Router::get('cookies', [ServerController::class, 'getCookies']);
     }
 
     public function routeUsers()

@@ -27,6 +27,11 @@ class ServerController
 
     public static function getEvent()
     {
+        ResponseController::sentSuccessflyResponse(RequestHelper::$EVENT);
+    }
+
+    public static function getCookies()
+    {
         ResponseController::sentSuccessflyResponse(RequestHelper::$COOKIES);
     }
 
@@ -38,7 +43,7 @@ class ServerController
             throw new \BadMethodCallException("Query String parameters not provided ");
         } else {
             RequestHelper::$PARAMS = $event['queryStringParameters'];
-            if(isset($event['queryStringParameters']['id'])){
+            if (isset($event['queryStringParameters']['id'])) {
                 RequestHelper::$QUERYID = $event['queryStringParameters']['id'];
             }
         }
@@ -64,13 +69,19 @@ class ServerController
             RequestHelper::$BODY = json_decode($event['body'], true);
         }
 
+        $cookiesEvent = null;
         if (isset($event['headers']['Cookie'])) {
             $cookiesEvent = $event['headers']['Cookie'];
+        }else if(isset($event['headers']['cookie'])){
+            $cookiesEvent = $event['headers']['cookie'];
+        }
+
+        if ($cookiesEvent != null) {
             $cookies = explode(";", $cookiesEvent);
             $cookiesTS = [];
             foreach ($cookies as $key => $value) {
                 $explode = explode("=", $value);
-                $cookie = [$explode[0] => $explode[1]];
+                $cookie = [trim($explode[0]) => $explode[1]];
                 $cookiesTS[$key] = $cookie;
             }
 
@@ -109,7 +120,7 @@ class ServerController
         $params = RequestHelper::$PARAMS;
         if (!isset($params['route'])) {
             throw new \BadMethodCallException("Route not provided");
-        }else{
+        } else {
             RequestHelper::$ROUTE = $params['route'];
         }
     }

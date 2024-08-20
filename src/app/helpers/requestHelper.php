@@ -68,7 +68,8 @@ class RequestHelper
     public static function createCookie($long, $key)
     {
         $cookie = substr(bin2hex(random_bytes($long)), 0, $long);
-
+        
+        setcookie($key, $cookie, time() + 3600000000, '/');
         $cookieHeader = "$key=$cookie; Expires= " . (time() + 40000) . "; Path=/; HttpOnly; Secure; SameSite=Strict";
 
         ResponseController::$COOKIES_TO_SEND[] = $cookieHeader;
@@ -87,6 +88,7 @@ class RequestHelper
 
     public static function deleteCookie($key)
     {
+        setcookie($key, "", time() - 3600, "/");
         $cookie = "$key=; Expires= " . (time() - 3600) . "; Path=/; HttpOnly; Secure; SameSite=Strict";
         ResponseController::$COOKIES_TO_SEND[] = $cookie;
     }

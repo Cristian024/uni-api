@@ -121,7 +121,7 @@ class ResponseController
             'statusCode' => $response->code,
             'headers' => $headers,
             'body' => json_encode([
-                'status' => $response->code,
+                'code' => $response->code,
                 'error' => $response->error,
                 'data' => $response->data
             ])
